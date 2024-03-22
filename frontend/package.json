@@ -15,6 +15,7 @@
     "@reduxjs/toolkit": "^1.9.7",
     "@uidotdev/usehooks": "^2.4.1",
     "axios": "^1.6.1",
+    "classnames": "^2.5.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
@@ -32,7 +33,7 @@
     "npm": "^10.4.0",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^9.3.0",
-    "rc-slider": "^10.4.0",
+    "rc-slider": "^10.5.0",
     "react": "^18",
     "react-animate-height": "^3.2.2",
     "react-dom": "^18",
@@ -47,6 +48,7 @@
     "react-youtube": "^10.1.0",
     "sass": "^1.69.3",
     "swiper": "^8.4.7",
+    "ua-parser-js": "^1.0.37",
     "ymaps-touch-scroll": "^2.2.0"
   },
   "devDependencies": {
@@ -55,6 +57,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/react-modal": "^3.16.2",
+    "@types/ua-parser-js": "^0.7.39",
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "^13.5.4",
