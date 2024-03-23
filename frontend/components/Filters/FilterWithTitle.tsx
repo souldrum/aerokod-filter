@@ -1,5 +1,6 @@
 import React from "react";
 import cn from "classnames";
+import { useMobile } from "@/hooks/useMobile";
 
 type Props = {
   title: string;
@@ -11,14 +12,17 @@ export const FilterWithTitle: React.FC<React.PropsWithChildren<Props>> = ({
   className,
   children,
 }) => {
+  const isMobile = useMobile();
+
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 basis-[428px]",
+        "flex flex-col gap-3",
+        !isMobile && "basis-[428px]",
         className && className
       )}
     >
-      <span className="opacity-40 t8">{title}</span>
+      <span className="opacity-40 t13 sm:t8">{title}</span>
       {children}
     </div>
   );

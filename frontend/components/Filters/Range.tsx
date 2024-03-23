@@ -40,7 +40,7 @@ export const Range: React.FC<Props> = ({
 
   return (
     <FilterWithTitle className="relative" title={title}>
-      <div className="flex justify-between t7 border border-black-100 rounded-base px-5 py-3.5">
+      <div className="flex justify-between t7 border border-black-100 rounded-base py-4 px-6 lg:py-3.5">
         <div>от {formatValue(from)}</div>
         <div className="bg-black-100 opacity-20 pb-px self-center w-5"></div>
         <div>до {formatValue(to)}</div>
