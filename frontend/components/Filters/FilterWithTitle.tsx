@@ -1,6 +1,6 @@
 import React from "react";
 import cn from "classnames";
-import { useMobile } from "@/hooks/useMobile";
+import { isMobile, isBrowser } from "react-device-detect";
 
 type Props = {
   title: string;
@@ -12,13 +12,11 @@ export const FilterWithTitle: React.FC<React.PropsWithChildren<Props>> = ({
   className,
   children,
 }) => {
-  const isMobile = useMobile();
-
   return (
     <div
       className={cn(
         "flex flex-col gap-3",
-        !isMobile && "basis-[428px]",
+        isBrowser && "basis-[428px]",
         className && className
       )}
     >
