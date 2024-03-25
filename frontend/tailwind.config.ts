@@ -64,10 +64,19 @@ module.exports = {
               "rotate(360.001deg) translate3d(12px, 48px, 0) rotate(-360.001deg)",
           },
         },
+        filtersSlideIn: {
+          from: {
+            transform: "translateY(-100%)",
+          },
+          to: {
+            transform: "translateY(0)",
+          },
+        },
       },
       animation: {
         flyArrow: "flyArrow 0.6s ease-in-out infinite alternate",
         flyHorizontal: "flyClouds 35s linear infinite",
+        "filters-in": "filtersSlideIn 0.5s ease both",
       },
     },
     container: {

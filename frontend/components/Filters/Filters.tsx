@@ -40,7 +40,7 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
           className="fixed top-0 inset-x-0 z-10 backdrop-blur-lg backdrop-brightness-50"
           lockScroll
         >
-          <div className="bg-white p-5 pb-0 rounded-b-2xl">
+          <div className="bg-white p-5 pb-0 rounded-b-2xl animate-filters-in">
             <CloseIcon
               className="ml-auto mb-6"
               onClick={() => onVisible(false)}
