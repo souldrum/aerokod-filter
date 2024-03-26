@@ -1,7 +1,8 @@
+import { Project } from "@/services/roomService.types";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
 
-export const ProjectFilter: React.FC<{ projects: string[] }> = ({
+export const ProjectFilter: React.FC<{ projects: Project[] }> = ({
   projects,
 }) => {
   const [value, setValue] = React.useState("all");
@@ -20,8 +21,8 @@ export const ProjectFilter: React.FC<{ projects: string[] }> = ({
             Все
           </option>
           {projects.map((p) => (
-            <option key={p} value={p}>
-              {p}
+            <option key={p.id} value={p.title}>
+              {p.title}
             </option>
           ))}
         </select>

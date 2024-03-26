@@ -10,28 +10,30 @@ import { ProjectFilter } from "./ProjectFilter";
 import { Range } from "./Range";
 import { ResetIcon } from "./ResetIcon";
 import { RoomFilter } from "./RoomFilter";
+import { useFilters } from "@/hooks/useApi";
+import { PulseLoader } from "react-spinners";
 
 export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
   onVisible = () => {},
 }) => {
-  const [startPrice, setStartPrice] = React.useState(1000000);
-  const [endPrice, setEndPrice] = React.useState(14000000);
-
-  const [startSquare, setStartSquare] = React.useState(21);
-  const [endSquare, setEndSquare] = React.useState(98);
+  const { data, isLoading, error } = useFilters();
 
   const isMounted = useMount();
-
   if (!isMounted) {
     return null;
   }
 
-  const handleReset = () => {
-    setStartPrice(1000000);
-    setEndPrice(14000000);
-    setStartSquare(21);
-    setEndSquare(98);
-  };
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center p-5">
+        <PulseLoader color="#2495FE" />
+      </div>
+    );
+
+  if (error)
+    return <h6 className="text-center">Ошибка загрузкиЖ {error.message}</h6>;
+
+  const handleReset = () => {};
 
   return (
     <>
@@ -47,27 +49,23 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
             />
             <div className="flex flex-col gap-8">
               <h4>ФИЛЬТР</h4>
-              <ProjectFilter projects={["1", "2", "3"]} />
-              <RoomFilter />
+              <ProjectFilter projects={data!.projects} />
+              <RoomFilter rooms={data!.rooms} />
               <Range
                 name="price"
                 title="Стоимость"
-                from={startPrice}
-                to={endPrice}
-                min={1000000}
-                max={14000000}
-                setFrom={setStartPrice}
-                setTo={setEndPrice}
+                min={data!.price.min}
+                max={data!.price.max}
+                minRange={data!.price.min_range}
+                maxRange={data!.price.max_range}
               />
               <Range
                 name="square"
                 title="Задайте площадь, м²"
-                from={startSquare}
-                to={endSquare}
-                min={21}
-                max={98}
-                setFrom={setStartSquare}
-                setTo={setEndSquare}
+                min={data!.square.min}
+                max={data!.square.max}
+                minRange={data!.square.min_range}
+                maxRange={data!.square.max_range}
               />
             </div>
             <Button
@@ -83,27 +81,23 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
       <BrowserView>
         <div className="flex flex-col gap-12 pb-16 mb-12 border-b-2 border-black-100 border-opacity-20">
           <div className="flex gap-3 justify-center xl:justify-between flex-wrap items-end">
-            <ProjectFilter projects={["1", "2", "3"]} />
-            <RoomFilter />
+            <ProjectFilter projects={data!.projects} />
+            <RoomFilter rooms={data!.rooms} />
             <Range
               name="price"
               title="Стоимость"
-              from={startPrice}
-              to={endPrice}
-              min={1000000}
-              max={14000000}
-              setFrom={setStartPrice}
-              setTo={setEndPrice}
+              min={data!.price.min}
+              max={data!.price.max}
+              minRange={data!.price.min_range}
+              maxRange={data!.price.max_range}
             />
             <Range
               name="square"
               title="Задайте площадь, м²"
-              from={startSquare}
-              to={endSquare}
-              min={21}
-              max={98}
-              setFrom={setStartSquare}
-              setTo={setEndSquare}
+              min={data!.square.min}
+              max={data!.square.max}
+              minRange={data!.square.min_range}
+              maxRange={data!.square.max_range}
             />
           </div>
           <div className="flex justify-between t8">

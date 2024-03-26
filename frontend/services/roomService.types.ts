@@ -12,9 +12,9 @@ export type Project = {
   title: string;
 };
 
-type Room = {
-  disabled?: boolean;
-  is_active?: boolean;
+export type Room = {
+  disabled: boolean;
+  is_active: boolean;
   number: number;
 };
 
