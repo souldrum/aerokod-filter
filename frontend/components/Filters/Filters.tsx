@@ -5,11 +5,11 @@ import { FloatingOverlay } from "@floating-ui/react";
 import React from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { Button } from "../Button/Button";
+import { CloseIcon } from "./CloseIcon";
 import { ProjectFilter } from "./ProjectFilter";
 import { Range } from "./Range";
 import { ResetIcon } from "./ResetIcon";
 import { RoomFilter } from "./RoomFilter";
-import { CloseIcon } from "./CloseIcon";
 
 export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
   onVisible = () => {},
@@ -47,7 +47,7 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
             />
             <div className="flex flex-col gap-8">
               <h4>ФИЛЬТР</h4>
-              <ProjectFilter />
+              <ProjectFilter projects={["1", "2", "3"]} />
               <RoomFilter />
               <Range
                 name="price"
@@ -83,7 +83,7 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
       <BrowserView>
         <div className="flex flex-col gap-12 pb-16 mb-12 border-b-2 border-black-100 border-opacity-20">
           <div className="flex gap-3 justify-center xl:justify-between flex-wrap items-end">
-            <ProjectFilter />
+            <ProjectFilter projects={["1", "2", "3"]} />
             <RoomFilter />
             <Range
               name="price"

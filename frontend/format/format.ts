@@ -35,3 +35,9 @@ export const formatReleaseDates = (value: string) => {
 
   return `${quarter} ${formatValue.slice(1)}`;
 };
+
+export const formatRoomsNumber = (value: number) => {
+  if (value === 0) return "Ст";
+
+  return value + "к";
+};

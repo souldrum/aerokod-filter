@@ -1,5 +1,3 @@
-"use client";
-
 import { formatPrice } from "@/format/format";
 import Slider from "rc-slider";
 import React from "react";

@@ -1,9 +1,9 @@
-"use client";
-
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
 
-export const ProjectFilter: React.FC = () => {
+export const ProjectFilter: React.FC<{ projects: string[] }> = ({
+  projects,
+}) => {
   const [value, setValue] = React.useState("all");
 
   return (
@@ -19,9 +19,11 @@ export const ProjectFilter: React.FC = () => {
           <option value="all" disabled>
             Все
           </option>
-          <option value="one">1</option>
-          <option value="two">2</option>
-          <option value="three">3</option>
+          {projects.map((p) => (
+            <option key={p} value={p}>
+              {p}
+            </option>
+          ))}
         </select>
         <Caret className="absolute right-6 lg:right-5 pointer-events-none" />
       </div>
@@ -29,7 +31,7 @@ export const ProjectFilter: React.FC = () => {
   );
 };
 
-const Caret: React.FC<React.SVGProps<SVGAElement>> = ({
+const Caret: React.FC<React.SVGProps<SVGSVGElement>> = ({
   stroke = "#040306",
   width = 11,
   height = 7,
