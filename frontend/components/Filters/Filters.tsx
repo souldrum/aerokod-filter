@@ -9,7 +9,13 @@ import {
   getSquareMaxSelector,
   getSquareMinSelector,
 } from "@/redux/selectors/FiltersSelectors";
-import { reset } from "@/redux/slices/FiltersSlice";
+import {
+  reset,
+  setPriceMax,
+  setPriceMin,
+  setSquareMax,
+  setSquareMin,
+} from "@/redux/slices/FiltersSlice";
 import { FloatingOverlay } from "@floating-ui/react";
 import React from "react";
 import { BrowserView, MobileView } from "react-device-detect";
@@ -86,6 +92,8 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
                 max={data!.price.max}
                 minRange={data!.price.min_range}
                 maxRange={data!.price.max_range}
+                setMin={setPriceMin}
+                setMax={setPriceMax}
               />
               <Range
                 name="square"
@@ -94,6 +102,8 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
                 max={data!.square.max}
                 minRange={data!.square.min_range}
                 maxRange={data!.square.max_range}
+                setMin={setSquareMin}
+                setMax={setSquareMax}
               />
             </div>
             <Button
@@ -123,6 +133,8 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
               max={data!.price.max}
               minRange={data!.price.min_range}
               maxRange={data!.price.max_range}
+              setMin={setPriceMin}
+              setMax={setPriceMax}
             />
             <Range
               name="square"
@@ -131,6 +143,8 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
               max={data!.square.max}
               minRange={data!.square.min_range}
               maxRange={data!.square.max_range}
+              setMin={setSquareMin}
+              setMax={setSquareMax}
             />
           </div>
           <div className="flex justify-between t8">

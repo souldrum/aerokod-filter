@@ -2,6 +2,8 @@ import { formatRangeData } from "@/format/format";
 import Slider from "rc-slider";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { useAppDispatch } from "@/hooks/useRedux";
 
 type Props = {
   name: "price" | "square";
@@ -10,6 +12,8 @@ type Props = {
   max: number;
   minRange: number;
   maxRange: number;
+  setMin: (value: number) => PayloadAction<number>;
+  setMax: (value: number) => PayloadAction<number>;
 };
 
 export const Range: React.FC<Props> = ({
@@ -19,17 +23,23 @@ export const Range: React.FC<Props> = ({
   max,
   minRange,
   maxRange,
+  setMin,
+  setMax,
 }) => {
+  const dispatch = useAppDispatch();
   const [from, setFrom] = React.useState(min);
   const [to, setTo] = React.useState(max);
 
   const handleChangeSlider = (value: number | number[]) => {
-    if (typeof value === "number") return;
-
-    const [from, to] = value;
-
+    const [from, to] = value as number[];
     setFrom(from);
     setTo(to);
+  };
+
+  const handleChangeComplete = (value: number | number[]) => {
+    const [from, to] = value as number[];
+    dispatch(setMin(from));
+    dispatch(setMax(to));
   };
 
   return (
@@ -65,6 +75,7 @@ export const Range: React.FC<Props> = ({
         min={minRange}
         max={maxRange}
         onChange={handleChangeSlider}
+        onChangeComplete={handleChangeComplete}
       />
     </FilterWithTitle>
   );
