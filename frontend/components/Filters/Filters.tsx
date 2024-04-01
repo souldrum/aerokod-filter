@@ -1,27 +1,50 @@
-"use client";
-
+import { useFilters } from "@/hooks/useApi";
 import { useMount } from "@/hooks/useMount";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import {
+  getPriceMaxSelector,
+  getPriceMinSelector,
+  getProjectSelector,
+  getRoomsSelector,
+  getSquareMaxSelector,
+  getSquareMinSelector,
+} from "@/redux/selectors/FiltersSelectors";
+import { reset } from "@/redux/slices/FiltersSlice";
 import { FloatingOverlay } from "@floating-ui/react";
 import React from "react";
 import { BrowserView, MobileView } from "react-device-detect";
+import { PulseLoader } from "react-spinners";
 import { Button } from "../Button/Button";
 import { CloseIcon } from "./CloseIcon";
 import { ProjectFilter } from "./ProjectFilter";
 import { Range } from "./Range";
 import { ResetIcon } from "./ResetIcon";
 import { RoomFilter } from "./RoomFilter";
-import { useFilters } from "@/hooks/useApi";
-import { PulseLoader } from "react-spinners";
+import cn from "classnames";
 
 export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
   onVisible = () => {},
 }) => {
-  const { data, isLoading, error } = useFilters();
+  const project = useAppSelector(getProjectSelector);
+  const rooms = useAppSelector(getRoomsSelector);
+  const priceMin = useAppSelector(getPriceMinSelector);
+  const priceMax = useAppSelector(getPriceMaxSelector);
+  const squareMin = useAppSelector(getSquareMinSelector);
+  const squareMax = useAppSelector(getSquareMaxSelector);
+  const { data, isLoading, error, isPlaceholder } = useFilters({
+    "f[rooms][]": rooms,
+    "f[projects][]": project,
+    "f[price][min]": priceMin,
+    "f[price][max]": priceMax,
+    "f[square][min]": squareMin,
+    "f[square][max]": squareMax,
+  });
 
-  const isMounted = useMount();
-  if (!isMounted) {
-    return null;
-  }
+  const dispatch = useAppDispatch();
+  // const isMounted = useMount();
+  // if (!isMounted) {
+  //   return null;
+  // }
 
   if (isLoading)
     return (
@@ -31,9 +54,9 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
     );
 
   if (error)
-    return <h6 className="text-center">Ошибка загрузкиЖ {error.message}</h6>;
+    return <h6 className="text-center">Ошибка загрузки {error.message}</h6>;
 
-  const handleReset = () => {};
+  const handleReset = () => dispatch(reset());
 
   return (
     <>
@@ -42,7 +65,12 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
           className="fixed top-0 inset-x-0 z-10 backdrop-blur-lg backdrop-brightness-50"
           lockScroll
         >
-          <div className="bg-white p-5 pb-0 rounded-b-2xl animate-filters-in">
+          <div
+            className={cn(
+              "bg-white p-5 pb-0 rounded-b-2xl animate-filters-in",
+              isPlaceholder && "animate-pulse"
+            )}
+          >
             <CloseIcon
               className="ml-auto mb-6"
               onClick={() => onVisible(false)}
@@ -79,7 +107,12 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
       </MobileView>
 
       <BrowserView>
-        <div className="flex flex-col gap-12 pb-16 mb-12 border-b-2 border-black-100 border-opacity-20">
+        <div
+          className={cn(
+            "flex flex-col gap-12 pb-16 mb-12 border-b-2 border-black-100 border-opacity-20",
+            isPlaceholder && "animate-pulse opacity-15"
+          )}
+        >
           <div className="flex gap-3 justify-center xl:justify-between flex-wrap items-end">
             <ProjectFilter projects={data!.projects} />
             <RoomFilter rooms={data!.rooms} />
@@ -102,7 +135,7 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
           </div>
           <div className="flex justify-between t8">
             <div className="hidden xl:block xl:w-32"></div>
-            <span className="t8">Найдено 245 квартир</span>
+            <span className="t8">Найдено {} квартир</span>
             <div className="flex items-center gap-3">
               <ResetIcon onReset={handleReset} />
               <span>Очистить все</span>

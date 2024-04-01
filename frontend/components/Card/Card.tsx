@@ -1,21 +1,9 @@
 import React from "react";
 import { Like } from "./Like";
 import { formatPrice, formatReleaseDates } from "@/format/format";
+import { ApartmentDetails } from "@/services/roomService.types";
 
-type CardData = {
-  id: number;
-  project_title: string;
-  rooms: number;
-  studio: boolean;
-  price: string;
-  old_price?: string;
-  square: string;
-  release_dates: string;
-  floor: string;
-  image: string;
-};
-
-export const Card: React.FC<{ card: CardData }> = ({ card }) => {
+export const Card: React.FC<{ card: ApartmentDetails }> = ({ card }) => {
   const {
     rooms,
     studio,

@@ -1,11 +1,15 @@
 import { Project } from "@/services/roomService.types";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { setProject } from "@/redux/slices/FiltersSlice";
+import { getProjectSelector } from "@/redux/selectors/FiltersSelectors";
 
 export const ProjectFilter: React.FC<{ projects: Project[] }> = ({
   projects,
 }) => {
-  const [value, setValue] = React.useState("all");
+  const projectId = useAppSelector(getProjectSelector);
+  const dispatch = useAppDispatch();
 
   return (
     <FilterWithTitle title="Проект">
@@ -14,14 +18,14 @@ export const ProjectFilter: React.FC<{ projects: Project[] }> = ({
           className="outline-none w-full appearance-none cursor-pointer"
           name="project"
           id="project"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={projectId}
+          onChange={(e) => dispatch(setProject(Number(e.target.value)))}
         >
-          <option value="all" disabled>
+          <option value={0} disabled>
             Все
           </option>
           {projects.map((p) => (
-            <option key={p.id} value={p.title}>
+            <option key={p.id} value={p.id} disabled={p.disabled}>
               {p.title}
             </option>
           ))}

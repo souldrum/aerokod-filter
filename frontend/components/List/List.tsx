@@ -1,127 +1,84 @@
+import { useFilteredApartments } from "@/hooks/useApi";
+import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import {
+  getPageSelector,
+  getPerPageSelector,
+  getPriceMaxSelector,
+  getPriceMinSelector,
+  getProjectSelector,
+  getRoomsSelector,
+  getSquareMaxSelector,
+  getSquareMinSelector,
+  getStateSelector,
+} from "@/redux/selectors/FiltersSelectors";
 import React from "react";
-import { Card } from "../Card/Card";
 import { Button } from "../Button/Button";
-
-const data = [
-  {
-    id: 9,
-    project_title: "Humberto Bartell I",
-    rooms: 1,
-    studio: false,
-    price: "3805800",
-    old_price: "5929876",
-    square: "44",
-    release_dates: "3кв. 2026",
-    floor: "3",
-    image: "https://via.placeholder.com/640x480.png/0011ee?text=quisquam",
-  },
-  {
-    id: 11,
-    project_title: "Humberto Bartell I",
-    rooms: 1,
-    studio: false,
-    price: "10294970",
-    old_price: "3511444",
-    square: "66",
-    release_dates: "3кв. 2026",
-    floor: "2",
-    image: "https://via.placeholder.com/640x480.png/008844?text=at",
-  },
-  {
-    id: 12,
-    project_title: "Humberto Bartell I",
-    rooms: 1,
-    studio: false,
-    price: "10302248",
-    old_price: "4413112",
-    square: "69",
-    release_dates: "3кв. 2026",
-    floor: "2",
-    image: "https://via.placeholder.com/640x480.png/00bb22?text=voluptatem",
-  },
-  {
-    id: 13,
-    project_title: "Humberto Bartell I",
-    rooms: 1,
-    studio: false,
-    price: "2079704",
-    old_price: "7325428",
-    square: "24",
-    release_dates: "3кв. 2026",
-    floor: "1",
-    image: "https://via.placeholder.com/640x480.png/00ee99?text=voluptatibus",
-  },
-  {
-    id: 19,
-    project_title: "Humberto Bartell I",
-    rooms: 1,
-    studio: false,
-    price: "13887667",
-    old_price: "10120894",
-    square: "48",
-    release_dates: "3кв. 2026",
-    floor: "1",
-    image: "https://via.placeholder.com/640x480.png/00bbdd?text=veniam",
-  },
-  {
-    id: 32,
-    project_title: "Humberto Bartell I",
-    rooms: 1,
-    studio: false,
-    price: "13075981",
-    old_price: "11431749",
-    square: "55",
-    release_dates: "3кв. 2026",
-    floor: "1",
-    image: "https://via.placeholder.com/640x480.png/000055?text=eius",
-  },
-  {
-    id: 33,
-    project_title: "Humberto Bartell I",
-    rooms: 1,
-    studio: false,
-    price: "11884276",
-    old_price: "6516077",
-    square: "89",
-    release_dates: "3кв. 2026",
-    floor: "8",
-    image: "https://via.placeholder.com/640x480.png/000099?text=accusamus",
-  },
-  {
-    id: 35,
-    project_title: "Humberto Bartell I",
-    rooms: 1,
-    studio: false,
-    price: "9484557",
-    old_price: "7529041",
-    square: "89",
-    release_dates: "3кв. 2026",
-    floor: "8",
-    image: "https://via.placeholder.com/640x480.png/000022?text=doloribus",
-  },
-  {
-    id: 43,
-    project_title: "Humberto Bartell I",
-    rooms: 1,
-    studio: false,
-    price: "10234509",
-    old_price: "7458016",
-    square: "88",
-    release_dates: "3кв. 2026",
-    floor: "1",
-    image: "https://via.placeholder.com/640x480.png/00bbbb?text=a",
-  },
-];
+import { Card } from "../Card/Card";
+import { reset } from "@/redux/slices/FiltersSlice";
+import { PulseLoader } from "react-spinners";
+import cn from "classnames";
 
 export const List: React.FC = () => {
+  const project = useAppSelector(getProjectSelector);
+  const rooms = useAppSelector(getRoomsSelector);
+  const priceMin = useAppSelector(getPriceMinSelector);
+  const priceMax = useAppSelector(getPriceMaxSelector);
+  const squareMin = useAppSelector(getSquareMinSelector);
+  const squareMax = useAppSelector(getSquareMaxSelector);
+  const perPage = useAppSelector(getPerPageSelector);
+  const page = useAppSelector(getPageSelector);
+
+  const dispatch = useAppDispatch();
+
+  const { data, error, isLoading, meta, isPlaceholder } = useFilteredApartments(
+    {
+      "f[projects][]": project,
+      "f[rooms][]": rooms,
+      "f[price][min]": priceMin,
+      "f[price][max]": priceMax,
+      "f[square][min]": squareMin,
+      "f[square][max]": squareMax,
+      per_page: 9,
+      page: 1,
+    }
+  );
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center p-5">
+        <PulseLoader color="#2495FE" />
+      </div>
+    );
+  if (error) return <h6>не удалось загрузить список</h6>;
+
+  const remainder = meta!.total - meta!.to;
+
   return (
-    <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-2.5 lg:gap-x-5 lg:gap-y-12 title-gutter">
-      {data.map((c) => (
+    <div
+      className={cn(
+        "grid lg:grid-cols-2 2xl:grid-cols-3 gap-2.5 lg:gap-x-5 lg:gap-y-12 title-gutter",
+        isPlaceholder && "animate-pulse opacity-15"
+      )}
+    >
+      {data!.map((c) => (
         <Card key={c.id} card={c} />
       ))}
-      <div className="col-span-full 2xl:col-start-2 2xl:col-end-3 pt-3.5 lg:pt-4">
-        <Button className="w-full">Показать еще 15 из 20</Button>
+      <div className="col-span-full self-end 2xl:col-start-2 2xl:col-end-3 pt-3.5 lg:pt-4">
+        {remainder == 0 ? null : (
+          <Button className="w-full">
+            {showPagination(remainder, meta!.total)}
+          </Button>
+        )}
       </div>
     </div>
   );
+};
+
+const showPagination = (
+  remainder: number,
+  total: number,
+  perPage: number = 9
+) => {
+  const result = remainder < perPage ? remainder : perPage;
+  return `Показать ещё ${result} из ${total}`;
 };

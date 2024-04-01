@@ -1,10 +1,18 @@
 import { formatRoomsNumber } from "@/format/format";
+import { useAppDispatch } from "@/hooks/useRedux";
+import { setRooms } from "@/redux/slices/FiltersSlice";
 import cn from "classnames";
 import React from "react";
 
-type Props = { number: number; active: boolean; disabled: boolean };
+type Props = {
+  number: number;
+  active: boolean;
+  disabled: boolean;
+};
 
 export const RoomTab: React.FC<Props> = ({ number, active, disabled }) => {
+  const dispatch = useAppDispatch();
+
   return (
     <div
       className={cn(
@@ -12,6 +20,7 @@ export const RoomTab: React.FC<Props> = ({ number, active, disabled }) => {
         active && "bg-blue !border-none text-white",
         disabled && "bg-gray-200 !border-none text-white"
       )}
+      onClick={() => dispatch(setRooms(number))}
     >
       {formatRoomsNumber(number)}
     </div>
