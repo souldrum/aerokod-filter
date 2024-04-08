@@ -1,10 +1,12 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import FiltersSlice from "./slices/FiltersSlice";
+import TotalItemsSlice from "./slices/TotalItemsSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       filters: FiltersSlice,
+      totalItems: TotalItemsSlice,
     },
   });
 };

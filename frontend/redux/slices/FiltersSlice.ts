@@ -1,8 +1,8 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 type QueryFilters = {
-  project: number;
-  rooms: number;
+  project?: number;
+  rooms?: number;
   priceMin?: number;
   priceMax?: number;
   squareMin?: number;
@@ -12,8 +12,8 @@ type QueryFilters = {
 };
 
 const initialState: QueryFilters = {
-  project: 1,
-  rooms: 0,
+  project: undefined,
+  rooms: undefined,
   priceMin: 2036656,
   priceMax: 14993187,
   squareMin: 20,
@@ -51,8 +51,8 @@ export const FiltersSlice = createSlice({
       state.page = payload;
     },
     reset(state) {
-      state.project = 0;
-      state.rooms = 1;
+      state.project = undefined;
+      state.rooms = undefined;
       state.priceMin = 2036656;
       state.priceMax = 14993187;
       state.squareMin = 20;

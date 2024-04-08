@@ -2,8 +2,12 @@ import React from "react";
 import { Like } from "./Like";
 import { formatPrice, formatReleaseDates } from "@/format/format";
 import { ApartmentDetails } from "@/services/roomService.types";
+import cn from "classnames";
 
-export const Card: React.FC<{ card: ApartmentDetails }> = ({ card }) => {
+export const Card: React.FC<{ card: ApartmentDetails; className?: string }> = ({
+  card,
+  className,
+}) => {
   const {
     rooms,
     studio,
@@ -17,7 +21,12 @@ export const Card: React.FC<{ card: ApartmentDetails }> = ({ card }) => {
   } = card;
 
   return (
-    <section className="flex flex-col gap-7 md:gap-12 border border-black-100 rounded-base px-6 py-4 md:px-10 md:pt-8 md:pb-12">
+    <section
+      className={cn(
+        "flex flex-col gap-7 md:gap-12 border border-black-100 rounded-base px-6 py-4 md:px-10 md:pt-8 md:pb-12",
+        className && className
+      )}
+    >
       <div className="flex justify-between">
         <div className="flex flex-col gap-2">
           <h3 className="t6-medium normal-case">

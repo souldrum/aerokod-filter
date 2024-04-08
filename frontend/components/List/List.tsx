@@ -9,14 +9,13 @@ import {
   getRoomsSelector,
   getSquareMaxSelector,
   getSquareMinSelector,
-  getStateSelector,
 } from "@/redux/selectors/FiltersSelectors";
+import cn from "classnames";
 import React from "react";
+import { PulseLoader } from "react-spinners";
 import { Button } from "../Button/Button";
 import { Card } from "../Card/Card";
-import { reset } from "@/redux/slices/FiltersSlice";
-import { PulseLoader } from "react-spinners";
-import cn from "classnames";
+import { setTotalItems } from "@/redux/slices/TotalItemsSlice";
 
 export const List: React.FC = () => {
   const project = useAppSelector(getProjectSelector);
@@ -25,10 +24,11 @@ export const List: React.FC = () => {
   const priceMax = useAppSelector(getPriceMaxSelector);
   const squareMin = useAppSelector(getSquareMinSelector);
   const squareMax = useAppSelector(getSquareMaxSelector);
-  const perPage = useAppSelector(getPerPageSelector);
-  const page = useAppSelector(getPageSelector);
-
   const dispatch = useAppDispatch();
+
+  const minPerPage = 9;
+
+  const [perPage, setPerPage] = React.useState(minPerPage);
 
   const { data, error, isLoading, meta, isPlaceholder } = useFilteredApartments(
     {
@@ -38,10 +38,18 @@ export const List: React.FC = () => {
       "f[price][max]": priceMax,
       "f[square][min]": squareMin,
       "f[square][max]": squareMax,
-      per_page: 9,
+      per_page: perPage,
       page: 1,
     }
   );
+
+  React.useEffect(() => {
+    if (meta) dispatch(setTotalItems(meta.total));
+  }, [meta?.total]);
+
+  React.useEffect(() => {
+    setPerPage(minPerPage);
+  }, [project, rooms, priceMin, priceMax, squareMin, squareMax]);
 
   if (isLoading)
     return (
@@ -54,19 +62,28 @@ export const List: React.FC = () => {
   const remainder = meta!.total - meta!.to;
 
   return (
-    <div
-      className={cn(
-        "grid lg:grid-cols-2 2xl:grid-cols-3 gap-2.5 lg:gap-x-5 lg:gap-y-12 title-gutter",
-        isPlaceholder && "animate-pulse opacity-15"
-      )}
-    >
+    <div className="grid lg:grid-cols-2 2xl:grid-cols-3 gap-2.5 lg:gap-x-5 lg:gap-y-12 title-gutter">
       {data!.map((c) => (
-        <Card key={c.id} card={c} />
+        <Card
+          className={cn(isPlaceholder && "animate-pulse opacity-15")}
+          key={c.id}
+          card={c}
+        />
       ))}
       <div className="col-span-full self-end 2xl:col-start-2 2xl:col-end-3 pt-3.5 lg:pt-4">
         {remainder == 0 ? null : (
-          <Button className="w-full">
-            {showPagination(remainder, meta!.total)}
+          <Button
+            className="w-full"
+            onClick={() => setPerPage((prev) => prev + 9)}
+            disabled={isPlaceholder}
+          >
+            {isPlaceholder ? (
+              <div className="flex justify-center items-center">
+                <PulseLoader color="#fff" />
+              </div>
+            ) : (
+              showPagination(remainder, meta!.total, minPerPage)
+            )}
           </Button>
         )}
       </div>

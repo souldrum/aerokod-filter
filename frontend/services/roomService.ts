@@ -8,19 +8,15 @@ import { FilterParams, FilteredResponse, Filters } from "./roomService.types";
 
 const api = axios.create({
   baseURL: "http://localhost:8083/api/v1/",
-  method: "GET",
-  headers: {
-    setContentType: "application/json",
-  },
 });
 
 export class RoomService {
   getFilters = async (params: FilterParams) => {
-    const { data } = await api<AxiosData<Filters>>("filters", {
+    const { data } = await api<AxiosResponse<Filters>>("filters", {
       params,
     });
 
-    return { data: data.data, meta: data.meta };
+    return data.data;
   };
   getApartments = async () => {
     const { data } = await api<AxiosData<ApartmentDetails[]>>("flats");
