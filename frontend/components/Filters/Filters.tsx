@@ -1,5 +1,4 @@
 import { useFilters } from "@/hooks/useApi";
-import { useMount } from "@/hooks/useMount";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import {
   getPriceMaxSelector,
@@ -9,6 +8,7 @@ import {
   getSquareMaxSelector,
   getSquareMinSelector,
 } from "@/redux/selectors/FiltersSelectors";
+import { getTotalItemsSelector } from "@/redux/selectors/TotalItemsSelectors";
 import {
   reset,
   setPriceMax,
@@ -17,6 +17,7 @@ import {
   setSquareMin,
 } from "@/redux/slices/FiltersSlice";
 import { FloatingOverlay } from "@floating-ui/react";
+import cn from "classnames";
 import React from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { PulseLoader } from "react-spinners";
@@ -26,8 +27,6 @@ import { ProjectFilter } from "./ProjectFilter";
 import { Range } from "./Range";
 import { ResetIcon } from "./ResetIcon";
 import { RoomFilter } from "./RoomFilter";
-import cn from "classnames";
-import { getTotalItemsSelector } from "@/redux/selectors/TotalItemsSelectors";
 
 export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
   onVisible = () => {},

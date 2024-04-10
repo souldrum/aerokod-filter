@@ -33,7 +33,7 @@ export const Range: React.FC<Props> = ({
   React.useEffect(() => {
     setFrom(min);
     setTo(max);
-  }, [min, max]);
+  }, [minRange, maxRange]);
 
   const handleChangeSlider = (value: number | number[]) => {
     const [from, to] = value as number[];

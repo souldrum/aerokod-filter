@@ -8,7 +8,7 @@ import { getProjectSelector } from "@/redux/selectors/FiltersSelectors";
 export const ProjectFilter: React.FC<{ projects: Project[] }> = ({
   projects,
 }) => {
-  const projectId = useAppSelector(getProjectSelector);
+  const project = useAppSelector(getProjectSelector);
   const dispatch = useAppDispatch();
 
   return (
@@ -18,10 +18,10 @@ export const ProjectFilter: React.FC<{ projects: Project[] }> = ({
           className="outline-none w-full appearance-none cursor-pointer"
           name="project"
           id="project"
-          value={projectId}
+          value={project}
           onChange={(e) => dispatch(setProject(Number(e.target.value)))}
         >
-          <option value={0} disabled>
+          <option value={undefined} disabled>
             Все
           </option>
           {projects.map((p) => (

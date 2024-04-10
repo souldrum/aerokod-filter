@@ -1,8 +1,6 @@
 import { useFilteredApartments } from "@/hooks/useApi";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import {
-  getPageSelector,
-  getPerPageSelector,
   getPriceMaxSelector,
   getPriceMinSelector,
   getProjectSelector,
@@ -10,12 +8,12 @@ import {
   getSquareMaxSelector,
   getSquareMinSelector,
 } from "@/redux/selectors/FiltersSelectors";
+import { setTotalItems } from "@/redux/slices/TotalItemsSlice";
 import cn from "classnames";
 import React from "react";
 import { PulseLoader } from "react-spinners";
 import { Button } from "../Button/Button";
 import { Card } from "../Card/Card";
-import { setTotalItems } from "@/redux/slices/TotalItemsSlice";
 
 export const List: React.FC = () => {
   const project = useAppSelector(getProjectSelector);
@@ -82,7 +80,7 @@ export const List: React.FC = () => {
                 <PulseLoader color="#fff" />
               </div>
             ) : (
-              showPagination(remainder, meta!.total, minPerPage)
+              showPagination(remainder, minPerPage)
             )}
           </Button>
         )}
@@ -91,11 +89,7 @@ export const List: React.FC = () => {
   );
 };
 
-const showPagination = (
-  remainder: number,
-  total: number,
-  perPage: number = 9
-) => {
+const showPagination = (remainder: number, perPage: number) => {
   const result = remainder < perPage ? remainder : perPage;
-  return `Показать ещё ${result} из ${total}`;
+  return `Показать ещё ${result} из ${remainder}`;
 };
