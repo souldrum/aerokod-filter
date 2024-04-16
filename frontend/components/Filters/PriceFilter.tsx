@@ -1,39 +1,26 @@
 import { formatRangeData } from "@/format/format";
+import { useAppDispatch } from "@/hooks/useRedux";
+import { setPriceMax, setPriceMin } from "@/redux/slices/FiltersSlice";
+import { Price } from "@/services/roomService.types";
 import Slider from "rc-slider";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
-import { PayloadAction } from "@reduxjs/toolkit";
-import { useAppDispatch } from "@/hooks/useRedux";
 
 type Props = {
-  name: "price" | "square";
-  title: string;
-  min: number;
-  max: number;
-  minRange: number;
-  maxRange: number;
-  setMin: (value: number) => PayloadAction<number>;
-  setMax: (value: number) => PayloadAction<number>;
+  price: Price;
 };
 
-export const Range: React.FC<Props> = ({
-  name,
-  title,
-  min,
-  max,
-  minRange,
-  maxRange,
-  setMin,
-  setMax,
-}) => {
+export const PriceFilter: React.FC<Props> = ({ price }) => {
+  const { min, min_range: minRange, max, max_range: maxRange } = price;
+
   const dispatch = useAppDispatch();
   const [from, setFrom] = React.useState(minRange);
   const [to, setTo] = React.useState(maxRange);
 
-  // React.useEffect(() => {
-  //   setFrom(min);
-  //   setTo(max);
-  // }, [min, max]);
+  React.useEffect(() => {
+    setFrom(min);
+    setTo(max);
+  }, [min, max]);
 
   const handleChangeSlider = (value: number | number[]) => {
     const [from, to] = value as number[];
@@ -43,16 +30,16 @@ export const Range: React.FC<Props> = ({
 
   const handleChangeComplete = (value: number | number[]) => {
     const [from, to] = value as number[];
-    dispatch(setMin(from));
-    dispatch(setMax(to));
+    dispatch(setPriceMin(from));
+    dispatch(setPriceMax(to));
   };
 
   return (
-    <FilterWithTitle className="relative" title={title}>
+    <FilterWithTitle className="relative" title="Стоимость">
       <div className="flex justify-between t7 border border-black-100 rounded-base py-4 px-6 lg:py-3.5">
-        <div>от {formatRangeData(name, from)}</div>
+        <div>от {formatRangeData("price", from)}</div>
         <div className="bg-black-100 opacity-20 pb-px self-center w-5"></div>
-        <div>до {formatRangeData(name, to)}</div>
+        <div>до {formatRangeData("price", to)}</div>
       </div>
       <Slider
         className="absolute bottom-0 w-11/12 self-center flex items-center"

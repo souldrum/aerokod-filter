@@ -9,13 +9,7 @@ import {
   getSquareMinSelector,
 } from "@/redux/selectors/FiltersSelectors";
 import { getTotalItemsSelector } from "@/redux/selectors/TotalItemsSelectors";
-import {
-  reset,
-  setPriceMax,
-  setPriceMin,
-  setSquareMax,
-  setSquareMin,
-} from "@/redux/slices/FiltersSlice";
+import { reset } from "@/redux/slices/FiltersSlice";
 import { FloatingOverlay } from "@floating-ui/react";
 import cn from "classnames";
 import React from "react";
@@ -23,10 +17,11 @@ import { BrowserView, MobileView } from "react-device-detect";
 import { PulseLoader } from "react-spinners";
 import { Button } from "../Button/Button";
 import { CloseIcon } from "./CloseIcon";
+import { PriceFilter } from "./PriceFilter";
 import { ProjectFilter } from "./ProjectFilter";
-import { Range } from "./Range";
 import { ResetIcon } from "./ResetIcon";
 import { RoomFilter } from "./RoomFilter";
+import { SquareFilter } from "./SquareFilter";
 
 export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
   onVisible = () => {},
@@ -94,26 +89,8 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
                 <h4>ФИЛЬТР</h4>
                 <ProjectFilter projects={projects!} />
                 <RoomFilter rooms={rooms!} />
-                <Range
-                  name="price"
-                  title="Стоимость"
-                  min={price!.min}
-                  max={price!.max}
-                  minRange={price!.min_range}
-                  maxRange={price!.max_range}
-                  setMin={setPriceMin}
-                  setMax={setPriceMax}
-                />
-                <Range
-                  name="square"
-                  title="Задайте площадь, м²"
-                  min={square!.min}
-                  max={square!.max}
-                  minRange={square!.min_range}
-                  maxRange={square!.max_range}
-                  setMin={setSquareMin}
-                  setMax={setSquareMax}
-                />
+                <PriceFilter price={price!} />
+                <SquareFilter square={square!} />
               </div>
             </div>
             <Button
@@ -136,26 +113,8 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
           <div className="flex gap-3 justify-center xl:justify-between flex-wrap items-end">
             <ProjectFilter projects={projects!} />
             <RoomFilter rooms={rooms!} />
-            <Range
-              name="price"
-              title="Стоимость"
-              min={price!.min}
-              max={price!.max}
-              minRange={price!.min_range}
-              maxRange={price!.max_range}
-              setMin={setPriceMin}
-              setMax={setPriceMax}
-            />
-            <Range
-              name="square"
-              title="Задайте площадь, м²"
-              min={square!.min}
-              max={square!.max}
-              minRange={square!.min_range}
-              maxRange={square!.max_range}
-              setMin={setSquareMin}
-              setMax={setSquareMax}
-            />
+            <PriceFilter price={price!} />
+            <SquareFilter square={square!} />
           </div>
           <div className="flex justify-between t8">
             <div className="hidden xl:block xl:w-32"></div>

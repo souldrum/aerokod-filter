@@ -28,8 +28,6 @@ export const useFilters = (params: FilterParams) => {
 };
 
 export const useFilteredApartments = (params: FilterParams) => {
-  const queryClient = useQueryClient();
-
   const result = useQuery({
     queryKey: ["filtered", params],
     queryFn: () => getFilteredApartments(params),
