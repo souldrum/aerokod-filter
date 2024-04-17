@@ -1,6 +1,8 @@
+"use client";
+
 import { formatRoomsNumber } from "@/format/format";
+import { useAppRouter } from "@/hooks/useAppRouter";
 import cn from "classnames";
-import { useRouter } from "next/navigation";
 import React from "react";
 
 type Props = {
@@ -16,11 +18,11 @@ export const RoomTab: React.FC<Props> = ({
   disabled,
   onSetNumber,
 }) => {
-  const router = useRouter();
+  const { pushQuery } = useAppRouter();
 
   const handleClick = (number: number) => {
-    router.push(`?rooms=${number}`);
     onSetNumber(number);
+    pushQuery("rooms", number.toString());
   };
 
   return (

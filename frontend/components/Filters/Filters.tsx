@@ -1,5 +1,8 @@
+"use client";
+
 import { useFilters } from "@/hooks/useApi";
-import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
+import { useAppRouter } from "@/hooks/useAppRouter";
+import { useAppSelector } from "@/hooks/useRedux";
 import {
   getPriceMaxSelector,
   getPriceMinSelector,
@@ -8,7 +11,6 @@ import {
   getSquareMinSelector,
 } from "@/redux/selectors/FiltersSelectors";
 import { getTotalItemsSelector } from "@/redux/selectors/TotalItemsSelectors";
-import { reset } from "@/redux/slices/FiltersSlice";
 import { FloatingOverlay } from "@floating-ui/react";
 import cn from "classnames";
 import { useSearchParams } from "next/navigation";
@@ -27,19 +29,24 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
   onVisible = () => {},
 }) => {
   const searchParams = useSearchParams();
+  const { clearQuery } = useAppRouter();
 
   const roomParams = searchParams.get("rooms");
   const [room, setRoom] = React.useState(
     roomParams ? Number(roomParams) : undefined
   );
 
-  const project = useAppSelector(getProjectSelector);
+  const projectParams = searchParams.get("project");
+  const [project, setProject] = React.useState(
+    projectParams ? Number(projectParams) : undefined
+  );
+
+  // const project = useAppSelector(getProjectSelector);
   const priceMin = useAppSelector(getPriceMinSelector);
   const priceMax = useAppSelector(getPriceMaxSelector);
   const squareMin = useAppSelector(getSquareMinSelector);
   const squareMax = useAppSelector(getSquareMaxSelector);
   const totalItems = useAppSelector(getTotalItemsSelector);
-  const dispatch = useAppDispatch();
 
   const {
     filtersLoading,
@@ -70,7 +77,7 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
       <h6 className="text-center">Ошибка загрузки {filtersError.message}</h6>
     );
 
-  const handleReset = () => dispatch(reset());
+  const handleReset = () => clearQuery();
 
   return (
     <>
@@ -93,7 +100,7 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
               />
               <div className="flex flex-col gap-8">
                 <h4>ФИЛЬТР</h4>
-                <ProjectFilter projects={projects!} />
+                <ProjectFilter projects={projects!} onSetProject={setProject} />
                 <RoomFilter rooms={rooms!} onSetRoom={setRoom} />
                 <PriceFilter price={price!} />
                 <SquareFilter square={square!} />
@@ -117,7 +124,7 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
           )}
         >
           <div className="flex gap-3 justify-center xl:justify-between flex-wrap items-end">
-            <ProjectFilter projects={projects!} />
+            <ProjectFilter projects={projects!} onSetProject={setProject} />
             <RoomFilter rooms={rooms!} onSetRoom={setRoom} />
             <PriceFilter price={price!} />
             <SquareFilter square={square!} />

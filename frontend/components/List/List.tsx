@@ -3,24 +3,22 @@ import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import {
   getPriceMaxSelector,
   getPriceMinSelector,
-  getProjectSelector,
-  getRoomsSelector,
   getSquareMaxSelector,
   getSquareMinSelector,
 } from "@/redux/selectors/FiltersSelectors";
 import { setTotalItems } from "@/redux/slices/TotalItemsSlice";
 import cn from "classnames";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { PulseLoader } from "react-spinners";
 import { Button } from "../Button/Button";
 import { Card } from "../Card/Card";
-import { useSearchParams } from "next/navigation";
 
 export const List: React.FC = () => {
   const searchParams = useSearchParams();
   const roomParams = searchParams.get("rooms");
+  const projectParams = searchParams.get("project");
 
-  const project = useAppSelector(getProjectSelector);
   const priceMin = useAppSelector(getPriceMinSelector);
   const priceMax = useAppSelector(getPriceMaxSelector);
   const squareMin = useAppSelector(getSquareMinSelector);
@@ -33,7 +31,7 @@ export const List: React.FC = () => {
 
   const { data, error, isLoading, meta, isPlaceholder } = useFilteredApartments(
     {
-      "f[projects][]": project,
+      "f[projects][]": projectParams ? Number(projectParams) : undefined,
       "f[rooms][]": roomParams ? Number(roomParams) : undefined,
       "f[price][min]": priceMin,
       "f[price][max]": priceMax,
@@ -50,7 +48,7 @@ export const List: React.FC = () => {
 
   React.useEffect(() => {
     setPerPage(minPerPage);
-  }, [project, priceMin, priceMax, squareMin, squareMax]);
+  }, [projectParams, roomParams, priceMin, priceMax, squareMin, squareMax]);
 
   if (isLoading)
     return (

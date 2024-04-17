@@ -19,7 +19,7 @@ export const RoomFilter: React.FC<{
           <RoomTab
             key={room.number}
             number={room.number}
-            active={room.is_active}
+            active={params === room.number.toString()}
             disabled={room.disabled}
             onSetNumber={onSetRoom}
           />

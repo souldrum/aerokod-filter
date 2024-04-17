@@ -4,12 +4,24 @@ import { FilterWithTitle } from "./FilterWithTitle";
 import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
 import { setProject } from "@/redux/slices/FiltersSlice";
 import { getProjectSelector } from "@/redux/selectors/FiltersSelectors";
+import { useAppRouter } from "@/hooks/useAppRouter";
+import { useSearchParams } from "next/navigation";
 
-export const ProjectFilter: React.FC<{ projects: Project[] }> = ({
-  projects,
-}) => {
+export const ProjectFilter: React.FC<{
+  projects: Project[];
+  onSetProject: (num: number) => void;
+}> = ({ projects, onSetProject }) => {
+  const { pushQuery } = useAppRouter();
+  const searchParams = useSearchParams();
+  const params = searchParams.get("project");
+
   const project = useAppSelector(getProjectSelector);
   const dispatch = useAppDispatch();
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onSetProject(Number(e.target.value));
+    pushQuery("project", e.target.value);
+  };
 
   return (
     <FilterWithTitle title="Проект">
@@ -18,10 +30,10 @@ export const ProjectFilter: React.FC<{ projects: Project[] }> = ({
           className="outline-none w-full appearance-none cursor-pointer"
           name="project"
           id="project"
-          value={project}
-          onChange={(e) => dispatch(setProject(Number(e.target.value)))}
+          value={params ? params : 0}
+          onChange={handleChange}
         >
-          <option value={undefined} disabled>
+          <option value={0} disabled>
             Все
           </option>
           {projects.map((p) => (
