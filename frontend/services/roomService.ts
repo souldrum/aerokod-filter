@@ -11,9 +11,9 @@ const api = axios.create({
 });
 
 export class RoomService {
-  getFilters = async (params: FilterParams) => {
+  getFilters = async (params?: FilterParams) => {
     const { data } = await api<AxiosResponse<Filters>>("filters", {
-      params,
+      params: params ?? undefined,
     });
 
     return data.data;
@@ -23,9 +23,9 @@ export class RoomService {
 
     return { data: data.data, meta: data.meta };
   };
-  getFilteredApartments = async (params: FilterParams) => {
+  getFilteredApartments = async (params?: FilterParams) => {
     const { data } = await api<AxiosData<ApartmentDetails[]>>("flats", {
-      params,
+      params: params ?? undefined,
     });
 
     return { data: data.data, meta: data.meta };

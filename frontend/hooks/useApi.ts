@@ -1,10 +1,6 @@
 import { RoomService } from "@/services/roomService";
 import { FilterParams } from "@/services/roomService.types";
-import {
-  keepPreviousData,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 const { getFilters, getFilteredApartments } = new RoomService();
 
@@ -15,10 +11,12 @@ export const useFilters = (params: FilterParams) => {
     placeholderData: keepPreviousData,
   });
 
+  const rooms = result.data?.rooms.sort((a, b) => a.number - b.number);
+
   return {
     projects: result.data?.projects,
     price: result.data?.price,
-    rooms: result.data?.rooms,
+    rooms,
     square: result.data?.square,
     filtersData: result.data,
     filtersError: result.error,

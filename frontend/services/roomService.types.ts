@@ -87,8 +87,6 @@ export type FilterParams = {
   "f[price][max]"?: number;
   "f[square][min]"?: number;
   "f[square][max]"?: number;
-  "sort[square]"?: number;
-  "sort[price]"?: number;
   per_page?: number;
   page?: number;
 };

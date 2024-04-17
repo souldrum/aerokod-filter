@@ -14,10 +14,13 @@ import React from "react";
 import { PulseLoader } from "react-spinners";
 import { Button } from "../Button/Button";
 import { Card } from "../Card/Card";
+import { useSearchParams } from "next/navigation";
 
 export const List: React.FC = () => {
+  const searchParams = useSearchParams();
+  const roomParams = searchParams.get("rooms");
+
   const project = useAppSelector(getProjectSelector);
-  const rooms = useAppSelector(getRoomsSelector);
   const priceMin = useAppSelector(getPriceMinSelector);
   const priceMax = useAppSelector(getPriceMaxSelector);
   const squareMin = useAppSelector(getSquareMinSelector);
@@ -31,7 +34,7 @@ export const List: React.FC = () => {
   const { data, error, isLoading, meta, isPlaceholder } = useFilteredApartments(
     {
       "f[projects][]": project,
-      "f[rooms][]": rooms,
+      "f[rooms][]": roomParams ? Number(roomParams) : undefined,
       "f[price][min]": priceMin,
       "f[price][max]": priceMax,
       "f[square][min]": squareMin,
@@ -47,7 +50,7 @@ export const List: React.FC = () => {
 
   React.useEffect(() => {
     setPerPage(minPerPage);
-  }, [project, rooms, priceMin, priceMax, squareMin, squareMax]);
+  }, [project, priceMin, priceMax, squareMin, squareMax]);
 
   if (isLoading)
     return (
