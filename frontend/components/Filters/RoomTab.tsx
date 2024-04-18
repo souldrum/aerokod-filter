@@ -18,11 +18,11 @@ export const RoomTab: React.FC<Props> = ({
   disabled,
   onSetNumber,
 }) => {
-  const { pushQuery } = useAppRouter();
+  const { appendQuery } = useAppRouter();
 
   const handleClick = (number: number) => {
     onSetNumber(number);
-    pushQuery("rooms", number.toString());
+    appendQuery("rooms", number.toString());
   };
 
   return (

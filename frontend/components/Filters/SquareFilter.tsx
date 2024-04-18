@@ -21,7 +21,7 @@ export const SquareFilter: React.FC<Props> = ({
 }) => {
   const { min, min_range: minRange, max, max_range: maxRange } = square;
 
-  const { pushQuery } = useAppRouter();
+  const { setQuery } = useAppRouter();
 
   const dispatch = useAppDispatch();
   const [from, setFrom] = React.useState(minRange);
@@ -44,8 +44,8 @@ export const SquareFilter: React.FC<Props> = ({
 
     onSetMin(from);
     onSetMax(to);
-    pushQuery("min_square", from.toString());
-    pushQuery("max_square", to.toString());
+    setQuery("min_square", from.toString());
+    setQuery("max_square", to.toString());
   };
 
   return (

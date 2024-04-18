@@ -14,7 +14,7 @@ type Props = {
 export const PriceFilter: React.FC<Props> = ({ price, onSetMin, onSetMax }) => {
   const { min, min_range: minRange, max, max_range: maxRange } = price;
 
-  const { pushQuery } = useAppRouter();
+  const { setQuery } = useAppRouter();
 
   const [from, setFrom] = React.useState(min || minRange);
   const [to, setTo] = React.useState(max ? max : maxRange);
@@ -35,8 +35,8 @@ export const PriceFilter: React.FC<Props> = ({ price, onSetMin, onSetMax }) => {
 
     onSetMin(from);
     onSetMax(to);
-    pushQuery("min_price", from.toString());
-    pushQuery("max_price", to.toString());
+    setQuery("min_price", from.toString());
+    setQuery("max_price", to.toString());
   };
 
   return (

@@ -10,7 +10,7 @@ export const RoomFilter: React.FC<{
   onSetRoom: (num: number) => void;
 }> = ({ rooms, onSetRoom }) => {
   const searchParams = useSearchParams();
-  const params = searchParams.get("rooms");
+  const params = searchParams.getAll("rooms");
 
   return (
     <FilterWithTitle title="Укажите количество комнат">
@@ -19,7 +19,7 @@ export const RoomFilter: React.FC<{
           <RoomTab
             key={room.number}
             number={room.number}
-            active={params === room.number.toString()}
+            active={params.includes(room.number.toString())}
             disabled={room.disabled}
             onSetNumber={onSetRoom}
           />

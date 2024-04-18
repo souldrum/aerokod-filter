@@ -8,9 +8,7 @@ import { Provider } from "react-redux";
 
 const HomePage: NextPage = () => (
   <StoreProvider>
-    <Layout>
-      <List />
-    </Layout>
+    <Layout>{/* <List /> */}</Layout>
   </StoreProvider>
 );
 

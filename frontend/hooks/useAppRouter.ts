@@ -8,15 +8,27 @@ export const useAppRouter = () => {
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
 
-  const pushQuery = (name: string, value: string) => {
+  const setQuery = (name: string, value: string) => {
     params.set(name, value);
+    router.push(`?${params.toString()}`);
+  };
+
+  const appendQuery = (name: string, value: string) => {
+    if (params.has(name, value)) {
+      params.delete(name, value);
+      router.push(`?${params.toString()}`);
+      return;
+    }
+
+    params.append(name, value);
     router.push(`?${params.toString()}`);
   };
 
   const clearQuery = () => router.replace(path);
 
   return {
-    pushQuery,
+    setQuery,
+    appendQuery,
     clearQuery,
   };
 };
