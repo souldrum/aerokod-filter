@@ -1,15 +1,6 @@
-"use client";
-
 import { useFilters } from "@/hooks/useApi";
 import { useAppRouter } from "@/hooks/useAppRouter";
 import { useAppSelector } from "@/hooks/useRedux";
-import {
-  getPriceMaxSelector,
-  getPriceMinSelector,
-  getProjectSelector,
-  getSquareMaxSelector,
-  getSquareMinSelector,
-} from "@/redux/selectors/FiltersSelectors";
 import { getTotalItemsSelector } from "@/redux/selectors/TotalItemsSelectors";
 import { FloatingOverlay } from "@floating-ui/react";
 import cn from "classnames";
@@ -41,11 +32,26 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
     projectParams ? Number(projectParams) : undefined
   );
 
-  // const project = useAppSelector(getProjectSelector);
-  const priceMin = useAppSelector(getPriceMinSelector);
-  const priceMax = useAppSelector(getPriceMaxSelector);
-  const squareMin = useAppSelector(getSquareMinSelector);
-  const squareMax = useAppSelector(getSquareMaxSelector);
+  const minPriceParams = searchParams.get("min_price");
+  const [minPrice, setMinPrice] = React.useState(
+    minPriceParams ? Number(minPriceParams) : undefined
+  );
+
+  const maxPriceParams = searchParams.get("max_price");
+  const [maxPrice, setMaxPrice] = React.useState(
+    maxPriceParams ? Number(maxPriceParams) : undefined
+  );
+
+  const minSquareParams = searchParams.get("min_square");
+  const [minSquare, setMinSquare] = React.useState(
+    minSquareParams ? Number(minSquareParams) : undefined
+  );
+
+  const maxSquareParams = searchParams.get("max_square");
+  const [maxSquare, setMaxSquare] = React.useState(
+    maxSquareParams ? Number(maxSquareParams) : undefined
+  );
+
   const totalItems = useAppSelector(getTotalItemsSelector);
 
   const {
@@ -59,10 +65,10 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
   } = useFilters({
     "f[rooms][]": room,
     "f[projects][]": project,
-    "f[price][min]": priceMin,
-    "f[price][max]": priceMax,
-    "f[square][min]": squareMin,
-    "f[square][max]": squareMax,
+    "f[price][min]": minPrice,
+    "f[price][max]": maxPrice,
+    "f[square][min]": minSquare,
+    "f[square][max]": maxSquare,
   });
 
   if (filtersLoading)
@@ -102,8 +108,16 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
                 <h4>ФИЛЬТР</h4>
                 <ProjectFilter projects={projects!} onSetProject={setProject} />
                 <RoomFilter rooms={rooms!} onSetRoom={setRoom} />
-                <PriceFilter price={price!} />
-                <SquareFilter square={square!} />
+                <PriceFilter
+                  price={price!}
+                  onSetMin={setMinPrice}
+                  onSetMax={setMaxPrice}
+                />
+                <SquareFilter
+                  square={square!}
+                  onSetMin={setMinSquare}
+                  onSetMax={setMaxSquare}
+                />
               </div>
             </div>
             <Button
@@ -126,8 +140,16 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
           <div className="flex gap-3 justify-center xl:justify-between flex-wrap items-end">
             <ProjectFilter projects={projects!} onSetProject={setProject} />
             <RoomFilter rooms={rooms!} onSetRoom={setRoom} />
-            <PriceFilter price={price!} />
-            <SquareFilter square={square!} />
+            <PriceFilter
+              price={price!}
+              onSetMin={setMinPrice}
+              onSetMax={setMaxPrice}
+            />
+            <SquareFilter
+              square={square!}
+              onSetMin={setMinSquare}
+              onSetMax={setMaxSquare}
+            />
           </div>
           <div className="flex justify-between t8">
             <div className="hidden xl:block xl:w-32"></div>

@@ -1,11 +1,10 @@
+import { useAppRouter } from "@/hooks/useAppRouter";
+import { useAppSelector } from "@/hooks/useRedux";
+import { getProjectSelector } from "@/redux/selectors/FiltersSelectors";
 import { Project } from "@/services/roomService.types";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
-import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import { setProject } from "@/redux/slices/FiltersSlice";
-import { getProjectSelector } from "@/redux/selectors/FiltersSelectors";
-import { useAppRouter } from "@/hooks/useAppRouter";
-import { useSearchParams } from "next/navigation";
 
 export const ProjectFilter: React.FC<{
   projects: Project[];
@@ -16,7 +15,6 @@ export const ProjectFilter: React.FC<{
   const params = searchParams.get("project");
 
   const project = useAppSelector(getProjectSelector);
-  const dispatch = useAppDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     onSetProject(Number(e.target.value));

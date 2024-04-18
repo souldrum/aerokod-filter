@@ -1,6 +1,5 @@
 import { formatRangeData } from "@/format/format";
-import { useAppDispatch } from "@/hooks/useRedux";
-import { setPriceMax, setPriceMin } from "@/redux/slices/FiltersSlice";
+import { useAppRouter } from "@/hooks/useAppRouter";
 import { Price } from "@/services/roomService.types";
 import Slider from "rc-slider";
 import React from "react";
@@ -8,14 +7,17 @@ import { FilterWithTitle } from "./FilterWithTitle";
 
 type Props = {
   price: Price;
+  onSetMin: (num: number) => void;
+  onSetMax: (num: number) => void;
 };
 
-export const PriceFilter: React.FC<Props> = ({ price }) => {
+export const PriceFilter: React.FC<Props> = ({ price, onSetMin, onSetMax }) => {
   const { min, min_range: minRange, max, max_range: maxRange } = price;
 
-  const dispatch = useAppDispatch();
-  const [from, setFrom] = React.useState(minRange);
-  const [to, setTo] = React.useState(maxRange);
+  const { pushQuery } = useAppRouter();
+
+  const [from, setFrom] = React.useState(min || minRange);
+  const [to, setTo] = React.useState(max ? max : maxRange);
 
   React.useEffect(() => {
     setFrom(min);
@@ -30,8 +32,11 @@ export const PriceFilter: React.FC<Props> = ({ price }) => {
 
   const handleChangeComplete = (value: number | number[]) => {
     const [from, to] = value as number[];
-    dispatch(setPriceMin(from));
-    dispatch(setPriceMax(to));
+
+    onSetMin(from);
+    onSetMax(to);
+    pushQuery("min_price", from.toString());
+    pushQuery("max_price", to.toString());
   };
 
   return (

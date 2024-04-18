@@ -1,11 +1,5 @@
 import { useFilteredApartments } from "@/hooks/useApi";
-import { useAppDispatch, useAppSelector } from "@/hooks/useRedux";
-import {
-  getPriceMaxSelector,
-  getPriceMinSelector,
-  getSquareMaxSelector,
-  getSquareMinSelector,
-} from "@/redux/selectors/FiltersSelectors";
+import { useAppDispatch } from "@/hooks/useRedux";
 import { setTotalItems } from "@/redux/slices/TotalItemsSlice";
 import cn from "classnames";
 import { useSearchParams } from "next/navigation";
@@ -18,11 +12,11 @@ export const List: React.FC = () => {
   const searchParams = useSearchParams();
   const roomParams = searchParams.get("rooms");
   const projectParams = searchParams.get("project");
+  const minPriceParams = searchParams.get("min_price");
+  const maxPriceParams = searchParams.get("max_price");
+  const minSquareParams = searchParams.get("min_square");
+  const maxSquareParams = searchParams.get("max_square");
 
-  const priceMin = useAppSelector(getPriceMinSelector);
-  const priceMax = useAppSelector(getPriceMaxSelector);
-  const squareMin = useAppSelector(getSquareMinSelector);
-  const squareMax = useAppSelector(getSquareMaxSelector);
   const dispatch = useAppDispatch();
 
   const minPerPage = 9;
@@ -33,10 +27,10 @@ export const List: React.FC = () => {
     {
       "f[projects][]": projectParams ? Number(projectParams) : undefined,
       "f[rooms][]": roomParams ? Number(roomParams) : undefined,
-      "f[price][min]": priceMin,
-      "f[price][max]": priceMax,
-      "f[square][min]": squareMin,
-      "f[square][max]": squareMax,
+      "f[price][min]": minPriceParams ? Number(minPriceParams) : undefined,
+      "f[price][max]": maxPriceParams ? Number(maxPriceParams) : undefined,
+      "f[square][min]": minSquareParams ? Number(minSquareParams) : undefined,
+      "f[square][max]": maxSquareParams ? Number(maxSquareParams) : undefined,
       per_page: perPage,
       page: 1,
     }
@@ -48,7 +42,14 @@ export const List: React.FC = () => {
 
   React.useEffect(() => {
     setPerPage(minPerPage);
-  }, [projectParams, roomParams, priceMin, priceMax, squareMin, squareMax]);
+  }, [
+    projectParams,
+    roomParams,
+    minPriceParams,
+    maxPriceParams,
+    minSquareParams,
+    maxSquareParams,
+  ]);
 
   if (isLoading)
     return (

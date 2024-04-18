@@ -30,7 +30,7 @@ export const RoomTab: React.FC<Props> = ({
       className={cn(
         "t7 border border-black-100 rounded-base px-4 py-4 sm:px-6 sm:py-3.5 cursor-pointer",
         active && "bg-blue !border-none text-white",
-        disabled && "bg-gray-200 !border-none text-white cursor-not-allowed"
+        disabled && "bg-gray-200 !border-none text-white !cursor-not-allowed"
       )}
       onClick={() => handleClick(number)}
       disabled={disabled}

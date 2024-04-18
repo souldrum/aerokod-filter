@@ -15,8 +15,8 @@ export const useAppRouter = () => {
 
   const clearQuery = () => router.replace(path);
 
-  return React.useMemo(
-    () => ({ pushQuery, clearQuery }),
-    [pushQuery, clearQuery]
-  );
+  return {
+    pushQuery,
+    clearQuery,
+  };
 };

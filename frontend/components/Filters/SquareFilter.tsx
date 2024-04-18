@@ -6,33 +6,46 @@ import { useAppDispatch } from "@/hooks/useRedux";
 import { FilterWithTitle } from "./FilterWithTitle";
 import { formatRangeData } from "@/format/format";
 import Slider from "rc-slider";
+import { useAppRouter } from "@/hooks/useAppRouter";
 
 type Props = {
   square: Square;
+  onSetMin: (num: number) => void;
+  onSetMax: (num: number) => void;
 };
 
-export const SquareFilter: React.FC<Props> = ({ square }) => {
+export const SquareFilter: React.FC<Props> = ({
+  square,
+  onSetMin,
+  onSetMax,
+}) => {
   const { min, min_range: minRange, max, max_range: maxRange } = square;
+
+  const { pushQuery } = useAppRouter();
 
   const dispatch = useAppDispatch();
   const [from, setFrom] = React.useState(minRange);
   const [to, setTo] = React.useState(maxRange);
 
-  React.useEffect(() => {
-    setFrom(min);
-    setTo(max);
-  }, [min, max]);
+  // React.useEffect(() => {
+  //   setFrom(min);
+  //   setTo(max);
+  // }, [min, max]);
 
   const handleChangeSlider = (value: number | number[]) => {
     const [from, to] = value as number[];
+
     setFrom(from);
     setTo(to);
   };
 
   const handleChangeComplete = (value: number | number[]) => {
     const [from, to] = value as number[];
-    dispatch(setSquareMin(from));
-    dispatch(setSquareMax(to));
+
+    onSetMin(from);
+    onSetMax(to);
+    pushQuery("min_square", from.toString());
+    pushQuery("max_square", to.toString());
   };
 
   return (
