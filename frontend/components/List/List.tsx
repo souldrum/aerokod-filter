@@ -9,15 +9,15 @@ import { Button } from "../Button/Button";
 import { Card } from "../Card/Card";
 
 export const List: React.FC = () => {
+  const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
-  const roomParams = searchParams.get("rooms");
+
+  const roomParams = searchParams.getAll("rooms");
   const projectParams = searchParams.get("project");
   const minPriceParams = searchParams.get("min_price");
   const maxPriceParams = searchParams.get("max_price");
   const minSquareParams = searchParams.get("min_square");
   const maxSquareParams = searchParams.get("max_square");
-
-  const dispatch = useAppDispatch();
 
   const minPerPage = 9;
 
@@ -26,7 +26,7 @@ export const List: React.FC = () => {
   const { data, error, isLoading, meta, isPlaceholder } = useFilteredApartments(
     {
       "f[projects][]": projectParams ? Number(projectParams) : undefined,
-      "f[rooms][]": roomParams ? Number(roomParams) : undefined,
+      "f[rooms][]": roomParams.length ? roomParams : undefined,
       "f[price][min]": minPriceParams ? Number(minPriceParams) : undefined,
       "f[price][max]": maxPriceParams ? Number(maxPriceParams) : undefined,
       "f[square][min]": minSquareParams ? Number(minSquareParams) : undefined,
@@ -42,14 +42,7 @@ export const List: React.FC = () => {
 
   React.useEffect(() => {
     setPerPage(minPerPage);
-  }, [
-    projectParams,
-    roomParams,
-    minPriceParams,
-    maxPriceParams,
-    minSquareParams,
-    maxSquareParams,
-  ]);
+  }, [meta?.total]);
 
   if (isLoading)
     return (

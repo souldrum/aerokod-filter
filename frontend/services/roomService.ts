@@ -11,23 +11,38 @@ const api = axios.create({
 });
 
 export class RoomService {
-  getFilters = async (params?: FilterParams) => {
+  getFilters = async (params: FilterParams) => {
     const { data } = await api<AxiosResponse<Filters>>("filters", {
-      params: params ?? undefined,
+      params: this.getURLSearchParams(params),
     });
 
     return data.data;
   };
-  getApartments = async () => {
-    const { data } = await api<AxiosData<ApartmentDetails[]>>("flats");
 
-    return { data: data.data, meta: data.meta };
-  };
-  getFilteredApartments = async (params?: FilterParams) => {
+  getFilteredApartments = async (params: FilterParams) => {
     const { data } = await api<AxiosData<ApartmentDetails[]>>("flats", {
-      params: params ?? undefined,
+      params: this.getURLSearchParams(params),
     });
 
     return { data: data.data, meta: data.meta };
   };
+
+  private getURLSearchParams(params: Record<string, any>) {
+    const searchParams = new URLSearchParams();
+
+    for (const param in params) {
+      if (!params[param]) continue;
+
+      if (Array.isArray(params[param])) {
+        const arr = params[param] as string[];
+        arr.forEach((item) => {
+          searchParams.append(param, item);
+        });
+      } else {
+        searchParams.append(param, String(params[param as keyof FilterParams]));
+      }
+    }
+
+    return searchParams;
+  }
 }

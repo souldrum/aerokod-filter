@@ -1,48 +1,17 @@
 import { useAppRouter } from "@/hooks/useAppRouter";
-import { useAppSelector } from "@/hooks/useRedux";
-import { getProjectSelector } from "@/redux/selectors/FiltersSelectors";
 import { Project } from "@/services/roomService.types";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
 
-const mockProjects = [
-  {
-    disabled: false,
-    id: 1,
-    is_active: false,
-    title: "Первый",
-  },
-  {
-    disabled: false,
-    id: 2,
-    is_active: false,
-    title: "Второй",
-  },
-  {
-    disabled: false,
-    id: 3,
-    is_active: false,
-    title: "Третий",
-  },
-  {
-    disabled: false,
-    id: 4,
-    is_active: false,
-    title: "Четвертый",
-  },
-];
-
 export const ProjectFilter: React.FC<{
   projects: Project[];
-  onSetProject: (num: number) => void;
-}> = ({ projects, onSetProject }) => {
+}> = ({ projects }) => {
   const { setQuery } = useAppRouter();
   const searchParams = useSearchParams();
   const params = searchParams.get("project");
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // onSetProject(Number(e.target.value));
     setQuery("project", e.target.value);
   };
 
@@ -59,7 +28,7 @@ export const ProjectFilter: React.FC<{
           <option value={0} disabled>
             Все
           </option>
-          {mockProjects.map((p) => (
+          {projects.map((p) => (
             <option key={p.id} value={p.id} disabled={p.disabled}>
               {p.title}
             </option>

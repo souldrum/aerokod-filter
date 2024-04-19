@@ -7,8 +7,7 @@ import { useSearchParams } from "next/navigation";
 
 export const RoomFilter: React.FC<{
   rooms: Room[];
-  onSetRoom: (num: number) => void;
-}> = ({ rooms, onSetRoom }) => {
+}> = ({ rooms }) => {
   const searchParams = useSearchParams();
   const params = searchParams.getAll("rooms");
 
@@ -21,7 +20,6 @@ export const RoomFilter: React.FC<{
             number={room.number}
             active={params.includes(room.number.toString())}
             disabled={room.disabled}
-            onSetNumber={onSetRoom}
           />
         ))}
       </div>

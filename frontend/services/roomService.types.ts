@@ -82,7 +82,7 @@ export interface AxiosData<T> extends AxiosResponse<T> {
 
 export type FilterParams = {
   "f[projects][]"?: number;
-  "f[rooms][]"?: number;
+  "f[rooms][]"?: string[];
   "f[price][min]"?: number;
   "f[price][max]"?: number;
   "f[square][min]"?: number;

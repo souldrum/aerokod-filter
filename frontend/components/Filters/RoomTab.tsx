@@ -9,19 +9,12 @@ type Props = {
   number: number;
   active: boolean;
   disabled: boolean;
-  onSetNumber: (number: number) => void;
 };
 
-export const RoomTab: React.FC<Props> = ({
-  number,
-  active,
-  disabled,
-  onSetNumber,
-}) => {
+export const RoomTab: React.FC<Props> = ({ number, active, disabled }) => {
   const { appendQuery } = useAppRouter();
 
   const handleClick = (number: number) => {
-    onSetNumber(number);
     appendQuery("rooms", number.toString());
   };
 

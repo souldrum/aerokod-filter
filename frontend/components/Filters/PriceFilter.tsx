@@ -1,28 +1,34 @@
 import { formatRangeData } from "@/format/format";
 import { useAppRouter } from "@/hooks/useAppRouter";
 import { Price } from "@/services/roomService.types";
+import { useSearchParams } from "next/navigation";
 import Slider from "rc-slider";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
 
 type Props = {
   price: Price;
-  onSetMin: (num: number) => void;
-  onSetMax: (num: number) => void;
 };
 
-export const PriceFilter: React.FC<Props> = ({ price, onSetMin, onSetMax }) => {
+export const PriceFilter: React.FC<Props> = ({ price }) => {
   const { min, min_range: minRange, max, max_range: maxRange } = price;
 
   const { setQuery } = useAppRouter();
+  const searchParams = useSearchParams();
+  const minPrice = searchParams.get("min_price");
+  const maxPrice = searchParams.get("max_price");
 
-  const [from, setFrom] = React.useState(min || minRange);
-  const [to, setTo] = React.useState(max ? max : maxRange);
+  const [from, setFrom] = React.useState(
+    minPrice ? Number(minPrice) : minRange
+  );
+  const [to, setTo] = React.useState(maxPrice ? Number(maxPrice) : maxRange);
 
   React.useEffect(() => {
-    setFrom(min);
-    setTo(max);
-  }, [min, max]);
+    if (!minPrice && !maxPrice) {
+      setFrom(minRange);
+      setTo(maxRange);
+    }
+  }, [minPrice, maxPrice]);
 
   const handleChangeSlider = (value: number | number[]) => {
     const [from, to] = value as number[];
@@ -33,8 +39,6 @@ export const PriceFilter: React.FC<Props> = ({ price, onSetMin, onSetMax }) => {
   const handleChangeComplete = (value: number | number[]) => {
     const [from, to] = value as number[];
 
-    onSetMin(from);
-    onSetMax(to);
     setQuery("min_price", from.toString());
     setQuery("max_price", to.toString());
   };

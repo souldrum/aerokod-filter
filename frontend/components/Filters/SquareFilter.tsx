@@ -1,36 +1,34 @@
-import React from "react";
-import { Range } from "./Range";
-import { Square } from "@/services/roomService.types";
-import { setSquareMax, setSquareMin } from "@/redux/slices/FiltersSlice";
-import { useAppDispatch } from "@/hooks/useRedux";
-import { FilterWithTitle } from "./FilterWithTitle";
 import { formatRangeData } from "@/format/format";
-import Slider from "rc-slider";
 import { useAppRouter } from "@/hooks/useAppRouter";
+import { Square } from "@/services/roomService.types";
+import { useSearchParams } from "next/navigation";
+import Slider from "rc-slider";
+import React from "react";
+import { FilterWithTitle } from "./FilterWithTitle";
 
 type Props = {
   square: Square;
-  onSetMin: (num: number) => void;
-  onSetMax: (num: number) => void;
 };
 
-export const SquareFilter: React.FC<Props> = ({
-  square,
-  onSetMin,
-  onSetMax,
-}) => {
+export const SquareFilter: React.FC<Props> = ({ square }) => {
   const { min, min_range: minRange, max, max_range: maxRange } = square;
 
   const { setQuery } = useAppRouter();
+  const searchParams = useSearchParams();
+  const minSquare = searchParams.get("min_square");
+  const maxSquare = searchParams.get("max_square");
 
-  const dispatch = useAppDispatch();
-  const [from, setFrom] = React.useState(minRange);
-  const [to, setTo] = React.useState(maxRange);
+  const [from, setFrom] = React.useState(
+    minSquare ? Number(minSquare) : minRange
+  );
+  const [to, setTo] = React.useState(maxSquare ? Number(maxSquare) : maxRange);
 
-  // React.useEffect(() => {
-  //   setFrom(min);
-  //   setTo(max);
-  // }, [min, max]);
+  React.useEffect(() => {
+    if (!minSquare && !maxSquare) {
+      setFrom(minRange);
+      setTo(maxRange);
+    }
+  }, [minSquare, maxSquare]);
 
   const handleChangeSlider = (value: number | number[]) => {
     const [from, to] = value as number[];
@@ -42,8 +40,6 @@ export const SquareFilter: React.FC<Props> = ({
   const handleChangeComplete = (value: number | number[]) => {
     const [from, to] = value as number[];
 
-    onSetMin(from);
-    onSetMax(to);
     setQuery("min_square", from.toString());
     setQuery("max_square", to.toString());
   };

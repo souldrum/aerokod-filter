@@ -19,38 +19,15 @@ import { SquareFilter } from "./SquareFilter";
 export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
   onVisible = () => {},
 }) => {
-  const searchParams = useSearchParams();
   const { clearQuery } = useAppRouter();
+  const searchParams = useSearchParams();
 
-  const roomParams = searchParams.get("rooms");
-  const [room, setRoom] = React.useState(
-    roomParams ? Number(roomParams) : undefined
-  );
-
+  const roomParams = searchParams.getAll("rooms");
   const projectParams = searchParams.get("project");
-  const [project, setProject] = React.useState(
-    projectParams ? Number(projectParams) : undefined
-  );
-
   const minPriceParams = searchParams.get("min_price");
-  const [minPrice, setMinPrice] = React.useState(
-    minPriceParams ? Number(minPriceParams) : undefined
-  );
-
   const maxPriceParams = searchParams.get("max_price");
-  const [maxPrice, setMaxPrice] = React.useState(
-    maxPriceParams ? Number(maxPriceParams) : undefined
-  );
-
   const minSquareParams = searchParams.get("min_square");
-  const [minSquare, setMinSquare] = React.useState(
-    minSquareParams ? Number(minSquareParams) : undefined
-  );
-
   const maxSquareParams = searchParams.get("max_square");
-  const [maxSquare, setMaxSquare] = React.useState(
-    maxSquareParams ? Number(maxSquareParams) : undefined
-  );
 
   const totalItems = useAppSelector(getTotalItemsSelector);
 
@@ -63,12 +40,12 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
     square,
     rooms,
   } = useFilters({
-    "f[rooms][]": room,
-    "f[projects][]": project,
-    "f[price][min]": minPrice,
-    "f[price][max]": maxPrice,
-    "f[square][min]": minSquare,
-    "f[square][max]": maxSquare,
+    "f[rooms][]": roomParams.length ? roomParams : undefined,
+    "f[projects][]": projectParams ? Number(projectParams) : undefined,
+    "f[price][min]": minPriceParams ? Number(minPriceParams) : undefined,
+    "f[price][max]": maxPriceParams ? Number(maxPriceParams) : undefined,
+    "f[square][min]": minSquareParams ? Number(minSquareParams) : undefined,
+    "f[square][max]": maxSquareParams ? Number(maxSquareParams) : undefined,
   });
 
   if (filtersLoading)
@@ -106,18 +83,10 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
               />
               <div className="flex flex-col gap-8">
                 <h4>ФИЛЬТР</h4>
-                <ProjectFilter projects={projects!} onSetProject={setProject} />
-                <RoomFilter rooms={rooms!} onSetRoom={setRoom} />
-                <PriceFilter
-                  price={price!}
-                  onSetMin={setMinPrice}
-                  onSetMax={setMaxPrice}
-                />
-                <SquareFilter
-                  square={square!}
-                  onSetMin={setMinSquare}
-                  onSetMax={setMaxSquare}
-                />
+                <ProjectFilter projects={projects!} />
+                <RoomFilter rooms={rooms!} />
+                <PriceFilter price={price!} />
+                <SquareFilter square={square!} />
               </div>
             </div>
             <Button
@@ -138,18 +107,10 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
           )}
         >
           <div className="flex gap-3 justify-center xl:justify-between flex-wrap items-end">
-            <ProjectFilter projects={projects!} onSetProject={setProject} />
-            <RoomFilter rooms={rooms!} onSetRoom={setRoom} />
-            <PriceFilter
-              price={price!}
-              onSetMin={setMinPrice}
-              onSetMax={setMaxPrice}
-            />
-            <SquareFilter
-              square={square!}
-              onSetMin={setMinSquare}
-              onSetMax={setMaxSquare}
-            />
+            <ProjectFilter projects={projects!} />
+            <RoomFilter rooms={rooms!} />
+            <PriceFilter price={price!} />
+            <SquareFilter square={square!} />
           </div>
           <div className="flex justify-between t8">
             <div className="hidden xl:block xl:w-32"></div>
