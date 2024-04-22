@@ -72,11 +72,20 @@ module.exports = {
             transform: "translateY(0)",
           },
         },
+        rotate: {
+          from: {
+            transform: "rotate(0deg)",
+          },
+          to: {
+            transform: "rotate(359deg)",
+          },
+        },
       },
       animation: {
         flyArrow: "flyArrow 0.6s ease-in-out infinite alternate",
         flyHorizontal: "flyClouds 35s linear infinite",
         "filters-in": "filtersSlideIn 0.5s ease both",
+        rotate: "rotate 0.3s linear",
       },
     },
     container: {
