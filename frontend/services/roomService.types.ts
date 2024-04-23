@@ -81,23 +81,21 @@ export interface AxiosData<T> extends AxiosResponse<T> {
 }
 
 export type ApiParams = {
-  "f[projects][]"?: number;
-  "f[rooms][]"?: string[];
-  "f[price][min]"?: number;
-  "f[price][max]"?: number;
-  "f[square][min]"?: number;
-  "f[square][max]"?: number;
-  per_page?: number;
-  page?: number;
+  "f[projects][]": string | null;
+  "f[rooms][]": string[];
+  "f[price][min]": string | null;
+  "f[price][max]": string | null;
+  "f[square][min]": string | null;
+  "f[square][max]": string | null;
+  per_page?: string | null;
 };
 
 export type SearchParams = {
-  projects?: string;
-  rooms?: string[];
-  priceMin?: string;
-  priceMax?: string;
-  squareMin?: string;
-  squareMax?: string;
-  perPage?: string | number;
-  page?: number;
+  projects: string | null;
+  rooms: string[];
+  priceMin: string | null;
+  priceMax: string | null;
+  squareMin: string | null;
+  squareMax: string | null;
+  perPage?: string | null;
 };

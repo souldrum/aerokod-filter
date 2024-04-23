@@ -1,18 +1,17 @@
 import {
   ApartmentDetails,
   AxiosData,
-  MetaData,
   SearchParams,
 } from "@/services/roomService.types";
 import axios, { AxiosResponse } from "axios";
-import { ApiParams, FilteredResponse, Filters } from "./roomService.types";
+import { ApiParams, Filters } from "./roomService.types";
 
 const api = axios.create({
   baseURL: "http://localhost:8083/api/v1/",
 });
 
 export class RoomService {
-  getFilters = async (params: ApiParams) => {
+  getFilters = async (params: SearchParams) => {
     const { data } = await api<AxiosResponse<Filters>>("filters", {
       params: this.getURLSearchParams(params),
     });
@@ -20,7 +19,7 @@ export class RoomService {
     return data.data;
   };
 
-  getFilteredApartments = async (params: ApiParams) => {
+  getFilteredApartments = async (params: SearchParams) => {
     const { data } = await api<AxiosData<ApartmentDetails[]>>("flats", {
       params: this.getURLSearchParams(params),
     });
@@ -28,29 +27,30 @@ export class RoomService {
     return { data: data.data, meta: data.meta };
   };
 
-  private getURLSearchParams(params: Record<string, any>) {
-    //сделать на вход красивый объект
+  private getURLSearchParams(params: SearchParams) {
+    const paramsApi = this.transformParams(params);
 
     const searchParams = new URLSearchParams();
 
-    for (const param in params) {
-      if (!params[param]) continue;
+    for (const param in paramsApi) {
+      const value = paramsApi[param as keyof ApiParams];
 
-      const arr = Array.isArray(params[param])
-        ? params[param]
-        : [params[param]];
+      if (!value) continue;
+
+      const arr = Array.isArray(value) ? value : [value];
 
       arr.forEach((item: string) => {
         searchParams.append(param, item);
       });
     }
 
+    searchParams.append("page", "1");
+
     return searchParams;
   }
 
   private transformParams(params: SearchParams) {
     const {
-      page,
       perPage,
       priceMax,
       priceMin,
@@ -61,14 +61,13 @@ export class RoomService {
     } = params;
 
     const paramsURL: ApiParams = {
-      "f[projects][]": projects ? Number(projects) : undefined,
-      "f[rooms][]": rooms && rooms.length ? rooms : undefined,
-      "f[price][min]": priceMin ? Number(priceMin) : undefined,
-      "f[price][max]": priceMax ? Number(priceMax) : undefined,
-      "f[square][min]": squareMin ? Number(squareMin) : undefined,
-      "f[square][max]": squareMax ? Number(squareMax) : undefined,
-      per_page: perPage ? Number(perPage) : 9,
-      page: 1,
+      "f[projects][]": projects,
+      "f[rooms][]": rooms,
+      "f[price][min]": priceMin,
+      "f[price][max]": priceMax,
+      "f[square][min]": squareMin,
+      "f[square][max]": squareMax,
+      per_page: perPage || undefined,
     };
 
     return paramsURL;

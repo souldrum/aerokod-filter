@@ -1,16 +1,15 @@
 import { RoomService } from "@/services/roomService";
 import {
-  ApiParams,
   MetaData,
   Price,
-  Room,
+  SearchParams,
   Square,
 } from "@/services/roomService.types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 const { getFilters, getFilteredApartments } = new RoomService();
 
-export const useFilters = (params: ApiParams) => {
+export const useFilters = (params: SearchParams) => {
   const result = useQuery({
     queryKey: ["filters", params],
     queryFn: () => getFilters(params),
@@ -36,7 +35,7 @@ export const useFilters = (params: ApiParams) => {
   };
 };
 
-export const useFilteredApartments = (params: ApiParams) => {
+export const useFilteredApartments = (params: SearchParams) => {
   const result = useQuery({
     queryKey: ["filtered", params],
     queryFn: () => getFilteredApartments(params),

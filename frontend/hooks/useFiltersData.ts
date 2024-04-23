@@ -21,14 +21,12 @@ export const useFiltersData = () => {
     square,
     rooms,
   } = useFilters({
-    "f[projects][]": projectParams ? Number(projectParams) : undefined,
-    "f[rooms][]": roomParams.length ? roomParams : undefined,
-    "f[price][min]": minPriceParams ? Number(minPriceParams) : undefined,
-    "f[price][max]": maxPriceParams ? Number(maxPriceParams) : undefined,
-    "f[square][min]": minSquareParams ? Number(minSquareParams) : undefined,
-    "f[square][max]": maxSquareParams ? Number(maxSquareParams) : undefined,
-    // per_page: perPageParams ? Number(perPageParams) : undefined,
-    // page: 1,
+    projects: projectParams,
+    rooms: roomParams,
+    priceMin: minPriceParams,
+    priceMax: maxPriceParams,
+    squareMin: minSquareParams,
+    squareMax: maxSquareParams,
   });
 
   return {

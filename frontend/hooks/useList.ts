@@ -23,27 +23,19 @@ export const useList = () => {
 
   const { data, error, isLoading, meta, isPlaceholder } = useFilteredApartments(
     {
-      "f[projects][]": projectParams ? Number(projectParams) : undefined,
-      "f[rooms][]": roomParams.length ? roomParams : undefined,
-      "f[price][min]": minPriceParams ? Number(minPriceParams) : undefined,
-      "f[price][max]": maxPriceParams ? Number(maxPriceParams) : undefined,
-      "f[square][min]": minSquareParams ? Number(minSquareParams) : undefined,
-      "f[square][max]": maxSquareParams ? Number(maxSquareParams) : undefined,
-      per_page: perPageParams ? Number(perPageParams) : perPage,
-      page: 1,
+      projects: projectParams,
+      rooms: roomParams,
+      priceMin: minPriceParams,
+      priceMax: maxPriceParams,
+      squareMin: minSquareParams,
+      squareMax: maxSquareParams,
+      perPage: perPage.toString(),
     }
   );
 
   React.useEffect(() => {
     setPerPage(minPerPage);
   }, [meta.total]);
-
-  // React.useEffect(() => {
-  //   if (isPlaceholder) return;
-  //   if (perPage > meta.total) setQuery("per_page", meta.total.toString());
-
-  //   if (perPage > minPerPage) setQuery("per_page", perPage.toString());
-  // }, [perPage, meta.total]);
 
   return {
     data,
