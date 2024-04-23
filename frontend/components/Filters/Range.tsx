@@ -1,9 +1,8 @@
 import { formatRangeData } from "@/format/format";
+import { useAppRouter } from "@/hooks/useAppRouter";
 import Slider from "rc-slider";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
-import { PayloadAction } from "@reduxjs/toolkit";
-import { useAppDispatch } from "@/hooks/useRedux";
 
 type Props = {
   name: "price" | "square";
@@ -12,8 +11,8 @@ type Props = {
   max: number;
   minRange: number;
   maxRange: number;
-  setMin: (value: number) => PayloadAction<number>;
-  setMax: (value: number) => PayloadAction<number>;
+  minParams: string | null;
+  maxParams: string | null;
 };
 
 export const Range: React.FC<Props> = ({
@@ -23,12 +22,22 @@ export const Range: React.FC<Props> = ({
   max,
   minRange,
   maxRange,
-  setMin,
-  setMax,
+  minParams,
+  maxParams,
 }) => {
-  const dispatch = useAppDispatch();
-  const [from, setFrom] = React.useState(minRange);
-  const [to, setTo] = React.useState(maxRange);
+  const { setQueries } = useAppRouter();
+
+  const [from, setFrom] = React.useState(
+    minParams ? Number(minParams) : minRange
+  );
+  const [to, setTo] = React.useState(maxParams ? Number(maxParams) : maxRange);
+
+  React.useEffect(() => {
+    if (!minParams && !maxParams) {
+      setFrom(minRange);
+      setTo(maxRange);
+    }
+  }, [minParams, minParams]);
 
   const handleChangeSlider = (value: number | number[]) => {
     const [from, to] = value as number[];
@@ -38,8 +47,11 @@ export const Range: React.FC<Props> = ({
 
   const handleChangeComplete = (value: number | number[]) => {
     const [from, to] = value as number[];
-    dispatch(setMin(from));
-    dispatch(setMax(to));
+
+    setQueries([
+      { name: `min_${name}`, value: from.toString() },
+      { name: `max_${name}`, value: to.toString() },
+    ]);
   };
 
   return (
