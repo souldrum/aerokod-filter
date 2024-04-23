@@ -1,6 +1,6 @@
 import React from "react";
 
-export const FilterIcon: React.FC<React.SVGProps<SVGAElement>> = ({
+export const FilterIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({
   width = 12,
   height = 12,
   fill = "white",

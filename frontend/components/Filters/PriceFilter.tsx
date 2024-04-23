@@ -1,7 +1,7 @@
 import { formatRangeData } from "@/format/format";
+import { useAppParams } from "@/hooks/useAppParams";
 import { useAppRouter } from "@/hooks/useAppRouter";
 import { Price } from "@/services/roomService.types";
-import { useSearchParams } from "next/navigation";
 import Slider from "rc-slider";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
@@ -14,9 +14,7 @@ export const PriceFilter: React.FC<Props> = ({ price }) => {
   const { min, min_range: minRange, max, max_range: maxRange } = price;
 
   const { setQueries } = useAppRouter();
-  const searchParams = useSearchParams();
-  const minPrice = searchParams.get("min_price");
-  const maxPrice = searchParams.get("max_price");
+  const { minPriceParams: minPrice, maxPriceParams: maxPrice } = useAppParams();
 
   const [from, setFrom] = React.useState(
     minPrice ? Number(minPrice) : minRange

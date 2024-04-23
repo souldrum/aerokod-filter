@@ -10,7 +10,7 @@ export const useAppRouter = () => {
   const setQuery = (name: string, value: string) => {
     params.set(name, value);
 
-    router.push(`?${params.toString()}`);
+    pushQuery();
   };
 
   const setQueries = (queries: { name: string; value: string }[]) => {
@@ -18,26 +18,34 @@ export const useAppRouter = () => {
       params.set(name, value);
     });
 
-    router.push(`?${params.toString()}`);
+    pushQuery();
   };
 
   const appendQuery = (name: string, value: string) => {
     if (params.has(name, value)) {
       params.delete(name, value);
-      router.push(`?${params.toString()}`);
+      pushQuery();
       return;
     }
 
     params.append(name, value);
-    router.push(`?${params.toString()}`);
+    pushQuery();
+  };
+
+  const deleteQuery = (name: string, value?: string) => {
+    params.delete(name, value);
+    pushQuery();
   };
 
   const clearQuery = () => router.replace(path);
+
+  const pushQuery = () => router.push(`?${params.toString()}`);
 
   return {
     setQuery,
     appendQuery,
     clearQuery,
     setQueries,
+    deleteQuery,
   };
 };

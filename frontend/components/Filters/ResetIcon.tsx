@@ -1,7 +1,7 @@
 import React from "react";
 import cn from "classnames";
 
-type Props = React.SVGProps<SVGAElement> & {
+type Props = React.SVGProps<SVGSVGElement> & {
   onReset: () => void;
 };
 

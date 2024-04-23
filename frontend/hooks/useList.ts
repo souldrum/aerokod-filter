@@ -1,24 +1,19 @@
 import React from "react";
 import { useFilteredApartments } from "./useApi";
 import { useAppParams } from "./useAppParams";
-import { useAppRouter } from "./useAppRouter";
 
 export const useList = () => {
   const minPerPage = 9;
-
-  const { setQuery } = useAppRouter();
 
   const {
     maxPriceParams,
     maxSquareParams,
     minPriceParams,
     minSquareParams,
-    perPageParams,
     projectParams,
     roomParams,
   } = useAppParams();
 
-  //проверку на пустые строки убрать в апи
   const [perPage, setPerPage] = React.useState(minPerPage);
 
   const { data, error, isLoading, meta, isPlaceholder } = useFilteredApartments(

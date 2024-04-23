@@ -1,5 +1,3 @@
-"use client";
-
 import { formatRoomsNumber } from "@/format/format";
 import { useAppRouter } from "@/hooks/useAppRouter";
 import cn from "classnames";
@@ -12,7 +10,11 @@ type Props = {
 };
 
 export const RoomTab: React.FC<Props> = ({ number, active, disabled }) => {
-  const { appendQuery } = useAppRouter();
+  const { appendQuery, deleteQuery } = useAppRouter();
+
+  React.useEffect(() => {
+    if (disabled) deleteQuery("rooms", number.toString());
+  }, [disabled, number]);
 
   const handleClick = (number: number) => {
     appendQuery("rooms", number.toString());

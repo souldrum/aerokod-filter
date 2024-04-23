@@ -1,7 +1,7 @@
 import { formatRangeData } from "@/format/format";
+import { useAppParams } from "@/hooks/useAppParams";
 import { useAppRouter } from "@/hooks/useAppRouter";
 import { Square } from "@/services/roomService.types";
-import { useSearchParams } from "next/navigation";
 import Slider from "rc-slider";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
@@ -14,9 +14,8 @@ export const SquareFilter: React.FC<Props> = ({ square }) => {
   const { min, min_range: minRange, max, max_range: maxRange } = square;
 
   const { setQueries } = useAppRouter();
-  const searchParams = useSearchParams();
-  const minSquare = searchParams.get("min_square");
-  const maxSquare = searchParams.get("max_square");
+  const { minSquareParams: minSquare, maxSquareParams: maxSquare } =
+    useAppParams();
 
   const [from, setFrom] = React.useState(
     minSquare ? Number(minSquare) : minRange
