@@ -1,5 +1,4 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React from "react";
 
 export const useAppRouter = () => {
   const router = useRouter();
@@ -10,6 +9,15 @@ export const useAppRouter = () => {
 
   const setQuery = (name: string, value: string) => {
     params.set(name, value);
+
+    router.push(`?${params.toString()}`);
+  };
+
+  const setQueries = (queries: { name: string; value: string }[]) => {
+    queries.forEach(({ name, value }) => {
+      params.set(name, value);
+    });
+
     router.push(`?${params.toString()}`);
   };
 
@@ -30,5 +38,6 @@ export const useAppRouter = () => {
     setQuery,
     appendQuery,
     clearQuery,
+    setQueries,
   };
 };

@@ -13,7 +13,7 @@ type Props = {
 export const PriceFilter: React.FC<Props> = ({ price }) => {
   const { min, min_range: minRange, max, max_range: maxRange } = price;
 
-  const { setQuery } = useAppRouter();
+  const { setQueries } = useAppRouter();
   const searchParams = useSearchParams();
   const minPrice = searchParams.get("min_price");
   const maxPrice = searchParams.get("max_price");
@@ -39,8 +39,10 @@ export const PriceFilter: React.FC<Props> = ({ price }) => {
   const handleChangeComplete = (value: number | number[]) => {
     const [from, to] = value as number[];
 
-    setQuery("min_price", from.toString());
-    setQuery("max_price", to.toString());
+    setQueries([
+      { name: "min_price", value: from.toString() },
+      { name: "max_price", value: to.toString() },
+    ]);
   };
 
   return (

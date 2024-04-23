@@ -13,7 +13,7 @@ type Props = {
 export const SquareFilter: React.FC<Props> = ({ square }) => {
   const { min, min_range: minRange, max, max_range: maxRange } = square;
 
-  const { setQuery } = useAppRouter();
+  const { setQueries } = useAppRouter();
   const searchParams = useSearchParams();
   const minSquare = searchParams.get("min_square");
   const maxSquare = searchParams.get("max_square");
@@ -40,8 +40,10 @@ export const SquareFilter: React.FC<Props> = ({ square }) => {
   const handleChangeComplete = (value: number | number[]) => {
     const [from, to] = value as number[];
 
-    setQuery("min_square", from.toString());
-    setQuery("max_square", to.toString());
+    setQueries([
+      { name: "min_square", value: from.toString() },
+      { name: "max_square", value: to.toString() },
+    ]);
   };
 
   return (

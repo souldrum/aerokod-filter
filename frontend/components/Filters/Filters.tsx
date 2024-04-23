@@ -1,10 +1,9 @@
-import { useFilters } from "@/hooks/useApi";
+import { showTotal } from "@/format/format";
 import { useAppRouter } from "@/hooks/useAppRouter";
-import { useAppSelector } from "@/hooks/useRedux";
-import { getTotalItemsSelector } from "@/redux/selectors/TotalItemsSelectors";
+import { useFiltersData } from "@/hooks/useFiltersData";
+import { useList } from "@/hooks/useList";
 import { FloatingOverlay } from "@floating-ui/react";
 import cn from "classnames";
-import { useSearchParams } from "next/navigation";
 import React from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { PulseLoader } from "react-spinners";
@@ -20,33 +19,11 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
   onVisible = () => {},
 }) => {
   const { clearQuery } = useAppRouter();
-  const searchParams = useSearchParams();
+  const { meta } = useList();
+  const { filtersError, filtersLoading, price, projects, rooms, square } =
+    useFiltersData();
 
-  const roomParams = searchParams.getAll("rooms");
-  const projectParams = searchParams.get("project");
-  const minPriceParams = searchParams.get("min_price");
-  const maxPriceParams = searchParams.get("max_price");
-  const minSquareParams = searchParams.get("min_square");
-  const maxSquareParams = searchParams.get("max_square");
-
-  const totalItems = useAppSelector(getTotalItemsSelector);
-
-  const {
-    filtersLoading,
-    filtersError,
-    filtersPlaceholder,
-    projects,
-    price,
-    square,
-    rooms,
-  } = useFilters({
-    "f[rooms][]": roomParams.length ? roomParams : undefined,
-    "f[projects][]": projectParams ? Number(projectParams) : undefined,
-    "f[price][min]": minPriceParams ? Number(minPriceParams) : undefined,
-    "f[price][max]": maxPriceParams ? Number(maxPriceParams) : undefined,
-    "f[square][min]": minSquareParams ? Number(minSquareParams) : undefined,
-    "f[square][max]": maxSquareParams ? Number(maxSquareParams) : undefined,
-  });
+  const [animate, setAnimate] = React.useState("animate-filters-in");
 
   if (filtersLoading)
     return (
@@ -57,10 +34,25 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
 
   if (filtersError)
     return (
-      <h6 className="text-center">Ошибка загрузки {filtersError.message}</h6>
+      <p className="t7 text-center pt-0 p-6 2xl:pt-0 2xl:p-12">
+        Ошибка загрузки фильтров:
+        <span className="text-red-500">{filtersError.message}</span>
+      </p>
     );
 
   const handleReset = () => clearQuery();
+
+  const handleClose = () => {
+    handleReset();
+    setTimeout(() => {
+      setAnimate("animate-filters-out");
+    }, 200);
+  };
+
+  const handleShowList = () => setAnimate("animate-filters-out");
+
+  const handleAnimationEnd = (e: React.AnimationEvent<HTMLDivElement>) =>
+    e.animationName === "filtersSlideOut" && onVisible(false);
 
   return (
     <>
@@ -72,27 +64,20 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
           lockScroll
         >
           <div
-            className={cn("bg-white p-5 pb-0 rounded-b-2xl animate-filters-in")}
+            className={cn("bg-white p-5 pb-0 rounded-b-2xl", animate)}
+            onAnimationEnd={handleAnimationEnd}
           >
-            <div
-              className={filtersPlaceholder ? "animate-pulse opacity-15" : ""}
-            >
-              <CloseIcon
-                className="ml-auto mb-6"
-                onClick={() => onVisible(false)}
-              />
+            <div>
+              <CloseIcon className="ml-auto mb-6" onClick={handleClose} />
               <div className="flex flex-col gap-8">
                 <h4>ФИЛЬТР</h4>
-                <ProjectFilter projects={projects!} />
-                <RoomFilter rooms={rooms!} />
-                <PriceFilter price={price!} />
-                <SquareFilter square={square!} />
+                <ProjectFilter projects={projects} />
+                <RoomFilter rooms={rooms} />
+                <PriceFilter price={price} />
+                <SquareFilter square={square} />
               </div>
             </div>
-            <Button
-              className="my-12 p-3 w-full"
-              onClick={() => onVisible(false)}
-            >
+            <Button className="my-12 p-3 w-full" onClick={handleShowList}>
               Смотреть квартиры
             </Button>
           </div>
@@ -100,25 +85,16 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
       </MobileView>
 
       <BrowserView>
-        <div
-          className={cn(
-            "flex flex-col gap-12 pb-16 mb-12 border-b-2 border-black-100 border-opacity-20",
-            filtersPlaceholder && "animate-pulse opacity-15"
-          )}
-        >
+        <div className="flex flex-col gap-12 pb-16 mb-12 border-b-2 border-black-100 border-opacity-20">
           <div className="flex gap-3 justify-center xl:justify-between flex-wrap items-end">
-            <ProjectFilter projects={projects!} />
-            <RoomFilter rooms={rooms!} />
-            <PriceFilter price={price!} />
-            <SquareFilter square={square!} />
+            <ProjectFilter projects={projects} />
+            <RoomFilter rooms={rooms} />
+            <PriceFilter price={price} />
+            <SquareFilter square={square} />
           </div>
           <div className="flex justify-between t8">
             <div className="hidden xl:block xl:w-32"></div>
-            <span className="t8">
-              {totalItems
-                ? `Найдено ${totalItems} квартир`
-                : "Ничего не найдено"}
-            </span>
+            <span className="t8">{showTotal(meta.total)}</span>
             <div className="flex items-center gap-3">
               <ResetIcon onReset={handleReset} />
               <span>Очистить все</span>

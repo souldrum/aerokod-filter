@@ -25,6 +25,7 @@ export const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
           </Button>
         </div>
       </MobileView>
+
       <BrowserView>
         <Filters />
       </BrowserView>

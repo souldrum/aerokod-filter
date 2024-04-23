@@ -28,19 +28,20 @@ export class RoomService {
   };
 
   private getURLSearchParams(params: Record<string, any>) {
+    //сделать на вход красивый объект
+
     const searchParams = new URLSearchParams();
 
     for (const param in params) {
       if (!params[param]) continue;
 
-      if (Array.isArray(params[param])) {
-        const arr = params[param] as string[];
-        arr.forEach((item) => {
-          searchParams.append(param, item);
-        });
-      } else {
-        searchParams.append(param, String(params[param as keyof FilterParams]));
-      }
+      const arr = Array.isArray(params[param])
+        ? params[param]
+        : [params[param]];
+
+      arr.forEach((item: string) => {
+        searchParams.append(param, item);
+      });
     }
 
     return searchParams;

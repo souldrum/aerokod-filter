@@ -1,5 +1,11 @@
 import { RoomService } from "@/services/roomService";
-import { FilterParams } from "@/services/roomService.types";
+import {
+  FilterParams,
+  MetaData,
+  Price,
+  Room,
+  Square,
+} from "@/services/roomService.types";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 const { getFilters, getFilteredApartments } = new RoomService();
@@ -11,16 +17,21 @@ export const useFilters = (params: FilterParams) => {
     placeholderData: keepPreviousData,
   });
 
-  const rooms = result.data?.rooms.sort((a, b) => a.number - b.number);
+  const projects = result.data ? result.data.projects : [];
+  const rooms = result.data
+    ? result.data.rooms.sort((a, b) => a.number - b.number)
+    : [];
+  const price = result.data ? result.data.price : ({} as Price);
+  const square = result.data ? result.data.square : ({} as Square);
 
   return {
-    projects: result.data?.projects,
-    price: result.data?.price,
+    projects,
+    price,
     rooms,
-    square: result.data?.square,
+    square,
     filtersData: result.data,
     filtersError: result.error,
-    filtersLoading: result.isLoading,
+    filtersLoading: result.isLoading || !result.isSuccess,
     filtersPlaceholder: result.isPlaceholderData,
   };
 };
@@ -32,11 +43,14 @@ export const useFilteredApartments = (params: FilterParams) => {
     placeholderData: keepPreviousData,
   });
 
+  const data = result.data ? result.data.data : [];
+  const meta = result.data ? result.data.meta : ({} as MetaData);
+
   return {
-    data: result.data?.data,
-    meta: result.data?.meta,
+    data,
+    meta,
     error: result.error,
-    isLoading: result.isLoading,
+    isLoading: result.isLoading || !result.isSuccess,
     isPlaceholder: result.isPlaceholderData,
   };
 };
