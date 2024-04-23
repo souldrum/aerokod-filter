@@ -1,9 +1,14 @@
+import { useAppParams } from "@/hooks/useAppParams";
+import { Room } from "@/services/roomService.types";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
-import { Room } from "@/services/roomService.types";
 import { RoomTab } from "./RoomTab";
 
-export const RoomFilter: React.FC<{ rooms: Room[] }> = ({ rooms }) => {
+export const RoomFilter: React.FC<{
+  rooms: Room[];
+}> = ({ rooms }) => {
+  const { roomParams: params } = useAppParams();
+
   return (
     <FilterWithTitle title="Укажите количество комнат">
       <div className="flex justify-between">
@@ -11,7 +16,7 @@ export const RoomFilter: React.FC<{ rooms: Room[] }> = ({ rooms }) => {
           <RoomTab
             key={room.number}
             number={room.number}
-            active={room.is_active}
+            active={params.includes(room.number.toString())}
             disabled={room.disabled}
           />
         ))}

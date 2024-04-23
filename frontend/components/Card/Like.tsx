@@ -1,13 +1,13 @@
-import React from 'react';
-import cn from 'classnames';
+import React from "react";
+import cn from "classnames";
 
-type Props = Pick<React.SVGProps<SVGAElement>, 'fill' | 'className'>;
+type Props = Pick<React.SVGProps<SVGSVGElement>, "fill" | "className">;
 
-export const Like: React.FC<Props> = ({ fill = '#040306', className }) => {
+export const Like: React.FC<Props> = ({ fill = "#040306", className }) => {
   return (
     <div
       className={cn(
-        'p-2.5 md:p-3 xl:p-4 border border-black-100 rounded-full',
+        "p-2.5 md:p-3 xl:p-4 border border-black-100 rounded-full",
         className && className
       )}
     >

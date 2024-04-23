@@ -72,11 +72,38 @@ module.exports = {
             transform: "translateY(0)",
           },
         },
+        filtersSlideOut: {
+          from: {
+            transform: "translateY(0)",
+          },
+          to: {
+            transform: "translateY(-100%)",
+          },
+        },
+        rotate: {
+          from: {
+            transform: "rotate(0deg)",
+          },
+          to: {
+            transform: "rotate(359deg)",
+          },
+        },
+        appear: {
+          from: {
+            opacity: "0",
+          },
+          to: {
+            opacity: "1",
+          },
+        },
       },
       animation: {
         flyArrow: "flyArrow 0.6s ease-in-out infinite alternate",
         flyHorizontal: "flyClouds 35s linear infinite",
         "filters-in": "filtersSlideIn 0.5s ease both",
+        "filters-out": "filtersSlideOut 0.5s ease both",
+        rotate: "rotate 0.3s linear",
+        appear: "appear .5s linear",
       },
     },
     container: {

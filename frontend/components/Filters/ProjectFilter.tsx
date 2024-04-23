@@ -1,11 +1,19 @@
+import { useAppRouter } from "@/hooks/useAppRouter";
 import { Project } from "@/services/roomService.types";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
 
-export const ProjectFilter: React.FC<{ projects: Project[] }> = ({
-  projects,
-}) => {
-  const [value, setValue] = React.useState("all");
+export const ProjectFilter: React.FC<{
+  projects: Project[];
+}> = ({ projects }) => {
+  const { setQuery } = useAppRouter();
+  const searchParams = useSearchParams();
+  const params = searchParams.get("project");
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setQuery("project", e.target.value);
+  };
 
   return (
     <FilterWithTitle title="Проект">
@@ -14,14 +22,14 @@ export const ProjectFilter: React.FC<{ projects: Project[] }> = ({
           className="outline-none w-full appearance-none cursor-pointer"
           name="project"
           id="project"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={params ? params : 0}
+          onChange={handleChange}
         >
-          <option value="all" disabled>
+          <option value={0} disabled>
             Все
           </option>
           {projects.map((p) => (
-            <option key={p.id} value={p.title}>
+            <option key={p.id} value={p.id} disabled={p.disabled}>
               {p.title}
             </option>
           ))}

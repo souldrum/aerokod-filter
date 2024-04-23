@@ -1,6 +1,6 @@
-import React from "react";
 import cn from "classnames";
-import { isMobile, isBrowser } from "react-device-detect";
+import React from "react";
+import { isBrowser } from "react-device-detect";
 
 type Props = {
   title: string;

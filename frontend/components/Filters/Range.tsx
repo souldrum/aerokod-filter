@@ -1,4 +1,5 @@
 import { formatRangeData } from "@/format/format";
+import { useAppRouter } from "@/hooks/useAppRouter";
 import Slider from "rc-slider";
 import React from "react";
 import { FilterWithTitle } from "./FilterWithTitle";
@@ -10,6 +11,8 @@ type Props = {
   max: number;
   minRange: number;
   maxRange: number;
+  minParams: string | null;
+  maxParams: string | null;
 };
 
 export const Range: React.FC<Props> = ({
@@ -19,17 +22,36 @@ export const Range: React.FC<Props> = ({
   max,
   minRange,
   maxRange,
+  minParams,
+  maxParams,
 }) => {
-  const [from, setFrom] = React.useState(min);
-  const [to, setTo] = React.useState(max);
+  const { setQueries } = useAppRouter();
+
+  const [from, setFrom] = React.useState(
+    minParams ? Number(minParams) : minRange
+  );
+  const [to, setTo] = React.useState(maxParams ? Number(maxParams) : maxRange);
+
+  React.useEffect(() => {
+    if (!minParams && !maxParams) {
+      setFrom(minRange);
+      setTo(maxRange);
+    }
+  }, [minParams, minParams]);
 
   const handleChangeSlider = (value: number | number[]) => {
-    if (typeof value === "number") return;
-
-    const [from, to] = value;
-
+    const [from, to] = value as number[];
     setFrom(from);
     setTo(to);
+  };
+
+  const handleChangeComplete = (value: number | number[]) => {
+    const [from, to] = value as number[];
+
+    setQueries([
+      { name: `min_${name}`, value: from.toString() },
+      { name: `max_${name}`, value: to.toString() },
+    ]);
   };
 
   return (
@@ -62,9 +84,10 @@ export const Range: React.FC<Props> = ({
         }}
         range
         value={[from, to]}
-        min={minRange}
-        max={maxRange}
+        min={min}
+        max={max}
         onChange={handleChangeSlider}
+        onChangeComplete={handleChangeComplete}
       />
     </FilterWithTitle>
   );

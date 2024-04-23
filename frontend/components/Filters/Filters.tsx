@@ -1,77 +1,74 @@
-"use client";
-
-import { useMount } from "@/hooks/useMount";
+import { showTotal } from "@/format/format";
+import { useAppRouter } from "@/hooks/useAppRouter";
+import { useFiltersData } from "@/hooks/useFiltersData";
+import { useList } from "@/hooks/useList";
 import { FloatingOverlay } from "@floating-ui/react";
+import cn from "classnames";
 import React from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { Button } from "../Button/Button";
 import { CloseIcon } from "./CloseIcon";
+import { PriceFilter } from "./PriceFilter";
 import { ProjectFilter } from "./ProjectFilter";
-import { Range } from "./Range";
 import { ResetIcon } from "./ResetIcon";
 import { RoomFilter } from "./RoomFilter";
-import { useFilters } from "@/hooks/useApi";
-import { PulseLoader } from "react-spinners";
+import { SquareFilter } from "./SquareFilter";
 
 export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
   onVisible = () => {},
 }) => {
-  const { data, isLoading, error } = useFilters();
+  const { clearQuery } = useAppRouter();
+  const { meta } = useList();
+  const { filtersError, price, projects, rooms, square } = useFiltersData();
 
-  const isMounted = useMount();
-  if (!isMounted) {
-    return null;
-  }
+  const [animate, setAnimate] = React.useState("animate-filters-in");
 
-  if (isLoading)
+  if (filtersError)
     return (
-      <div className="flex justify-center items-center p-5">
-        <PulseLoader color="#2495FE" />
-      </div>
+      <p className="t7 text-center pt-0 p-6 2xl:pt-0 2xl:p-12">
+        Ошибка загрузки фильтров:
+        <span className="text-red-500">{filtersError.message}</span>
+      </p>
     );
 
-  if (error)
-    return <h6 className="text-center">Ошибка загрузкиЖ {error.message}</h6>;
+  const handleReset = () => clearQuery();
 
-  const handleReset = () => {};
+  const handleClose = () => {
+    handleReset();
+    setTimeout(() => {
+      setAnimate("animate-filters-out");
+    }, 200);
+  };
+
+  const handleShowList = () => setAnimate("animate-filters-out");
+
+  const handleAnimationEnd = (e: React.AnimationEvent<HTMLDivElement>) =>
+    e.animationName === "filtersSlideOut" && onVisible(false);
 
   return (
     <>
       <MobileView>
         <FloatingOverlay
-          className="fixed top-0 inset-x-0 z-10 backdrop-blur-lg backdrop-brightness-50"
+          className={cn(
+            "fixed top-0 inset-x-0 z-10 backdrop-blur-lg backdrop-brightness-50"
+          )}
           lockScroll
         >
-          <div className="bg-white p-5 pb-0 rounded-b-2xl animate-filters-in">
-            <CloseIcon
-              className="ml-auto mb-6"
-              onClick={() => onVisible(false)}
-            />
-            <div className="flex flex-col gap-8">
-              <h4>ФИЛЬТР</h4>
-              <ProjectFilter projects={data!.projects} />
-              <RoomFilter rooms={data!.rooms} />
-              <Range
-                name="price"
-                title="Стоимость"
-                min={data!.price.min}
-                max={data!.price.max}
-                minRange={data!.price.min_range}
-                maxRange={data!.price.max_range}
-              />
-              <Range
-                name="square"
-                title="Задайте площадь, м²"
-                min={data!.square.min}
-                max={data!.square.max}
-                minRange={data!.square.min_range}
-                maxRange={data!.square.max_range}
-              />
+          <div
+            className={cn("bg-white p-5 pb-0 rounded-b-2xl", animate)}
+            onAnimationEnd={handleAnimationEnd}
+          >
+            <div>
+              <CloseIcon className="ml-auto mb-6" onClick={handleClose} />
+              <div className="flex flex-col gap-8">
+                <h4>ФИЛЬТР</h4>
+                <ProjectFilter projects={projects} />
+                <RoomFilter rooms={rooms} />
+                <PriceFilter price={price} />
+                <SquareFilter square={square} />
+              </div>
             </div>
-            <Button
-              className="my-12 p-3 w-full"
-              onClick={() => onVisible(false)}
-            >
+            <Button className="my-12 p-3 w-full" onClick={handleShowList}>
               Смотреть квартиры
             </Button>
           </div>
@@ -81,28 +78,14 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
       <BrowserView>
         <div className="flex flex-col gap-12 pb-16 mb-12 border-b-2 border-black-100 border-opacity-20">
           <div className="flex gap-3 justify-center xl:justify-between flex-wrap items-end">
-            <ProjectFilter projects={data!.projects} />
-            <RoomFilter rooms={data!.rooms} />
-            <Range
-              name="price"
-              title="Стоимость"
-              min={data!.price.min}
-              max={data!.price.max}
-              minRange={data!.price.min_range}
-              maxRange={data!.price.max_range}
-            />
-            <Range
-              name="square"
-              title="Задайте площадь, м²"
-              min={data!.square.min}
-              max={data!.square.max}
-              minRange={data!.square.min_range}
-              maxRange={data!.square.max_range}
-            />
+            <ProjectFilter projects={projects} />
+            <RoomFilter rooms={rooms} />
+            <PriceFilter price={price} />
+            <SquareFilter square={square} />
           </div>
           <div className="flex justify-between t8">
             <div className="hidden xl:block xl:w-32"></div>
-            <span className="t8">Найдено 245 квартир</span>
+            <span className="t8">{showTotal(meta.total)}</span>
             <div className="flex items-center gap-3">
               <ResetIcon onReset={handleReset} />
               <span>Очистить все</span>

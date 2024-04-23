@@ -44,3 +44,21 @@ export const formatRoomsNumber = (value: number) => {
 
   return value + "к";
 };
+
+export const showTotal = (total: number) => {
+  if (total == 0) return "Ничего не найдено";
+
+  const string = String(total);
+
+  switch (true) {
+    case string.endsWith("2") && !string.endsWith("12"):
+    case string.endsWith("3") && !string.endsWith("13"):
+    case string.endsWith("4") && !string.endsWith("14"):
+      return `Найдено ${total} квартиры`;
+    case string.endsWith("1") && !string.endsWith("11"):
+      return `Найдено ${total} квартира`;
+
+    default:
+      return `Найдено ${total} квартир`;
+  }
+};

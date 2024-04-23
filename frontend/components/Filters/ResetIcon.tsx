@@ -1,7 +1,7 @@
 import React from "react";
 import cn from "classnames";
 
-type Props = React.SVGProps<SVGAElement> & {
+type Props = React.SVGProps<SVGSVGElement> & {
   onReset: () => void;
 };
 
@@ -10,15 +10,29 @@ export const ResetIcon: React.FC<Props> = ({
   className,
   onReset,
 }) => {
+  const [animate, setAnimate] = React.useState(false);
+
+  const handleReset = () => {
+    onReset();
+    setAnimate(true);
+  };
+
+  const handleAnimationEnd = () => setAnimate(false);
+
   return (
     <svg
-      className={cn("h-3 w-3 cursor-pointer", className && className)}
+      className={cn(
+        "h-3 w-3 cursor-pointer",
+        animate && "animate-rotate",
+        className && className
+      )}
       width="12"
       height="13"
       viewBox="0 0 12 13"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      onClick={onReset}
+      onClick={handleReset}
+      onAnimationEnd={handleAnimationEnd}
     >
       <path
         opacity="0.78"
