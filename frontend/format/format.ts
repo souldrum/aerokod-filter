@@ -51,9 +51,9 @@ export const showTotal = (total: number) => {
   const string = String(total);
 
   switch (true) {
-    case string.length !== 2 && string.endsWith("2"):
-    case string.length !== 2 && string.endsWith("3"):
-    case string.length !== 2 && string.endsWith("4"):
+    case string.endsWith("2") && !string.endsWith("12"):
+    case string.endsWith("3") && !string.endsWith("13"):
+    case string.endsWith("4") && !string.endsWith("14"):
       return `Найдено ${total} квартиры`;
     case string.endsWith("1") && !string.endsWith("11"):
       return `Найдено ${total} квартира`;

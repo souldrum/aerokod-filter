@@ -1,15 +1,23 @@
+import { useFiltersData } from "@/hooks/useFiltersData";
+import { useList } from "@/hooks/useList";
 import React from "react";
-import { Filters } from "../Filters/Filters";
 import { BrowserView, MobileView } from "react-device-detect";
+import { PulseLoader } from "react-spinners";
 import { Button } from "../Button/Button";
-import { useMount } from "@/hooks/useMount";
 import { FilterIcon } from "../Filters/FilterIcon";
+import { Filters } from "../Filters/Filters";
 
 export const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [showFilters, setShowFilters] = React.useState(false);
-  const isMounted = useMount();
+  const { isLoading } = useList();
+  const { filtersLoading } = useFiltersData();
 
-  if (!isMounted) return null;
+  if (isLoading || filtersLoading)
+    return (
+      <div className="flex h-screen justify-center items-center p-5">
+        <PulseLoader color="#2495FE" />
+      </div>
+    );
 
   return (
     <div className="container pt-4 lg:pt-8">

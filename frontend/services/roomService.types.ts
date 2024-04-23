@@ -80,7 +80,7 @@ export interface AxiosData<T> extends AxiosResponse<T> {
   meta: MetaData;
 }
 
-export type FilterParams = {
+export type ApiParams = {
   "f[projects][]"?: number;
   "f[rooms][]"?: string[];
   "f[price][min]"?: number;
@@ -88,5 +88,16 @@ export type FilterParams = {
   "f[square][min]"?: number;
   "f[square][max]"?: number;
   per_page?: number;
+  page?: number;
+};
+
+export type SearchParams = {
+  projects?: string;
+  rooms?: string[];
+  priceMin?: string;
+  priceMax?: string;
+  squareMin?: string;
+  squareMax?: string;
+  perPage?: string | number;
   page?: number;
 };

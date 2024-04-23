@@ -2,16 +2,17 @@ import {
   ApartmentDetails,
   AxiosData,
   MetaData,
+  SearchParams,
 } from "@/services/roomService.types";
 import axios, { AxiosResponse } from "axios";
-import { FilterParams, FilteredResponse, Filters } from "./roomService.types";
+import { ApiParams, FilteredResponse, Filters } from "./roomService.types";
 
 const api = axios.create({
   baseURL: "http://localhost:8083/api/v1/",
 });
 
 export class RoomService {
-  getFilters = async (params: FilterParams) => {
+  getFilters = async (params: ApiParams) => {
     const { data } = await api<AxiosResponse<Filters>>("filters", {
       params: this.getURLSearchParams(params),
     });
@@ -19,7 +20,7 @@ export class RoomService {
     return data.data;
   };
 
-  getFilteredApartments = async (params: FilterParams) => {
+  getFilteredApartments = async (params: ApiParams) => {
     const { data } = await api<AxiosData<ApartmentDetails[]>>("flats", {
       params: this.getURLSearchParams(params),
     });
@@ -45,5 +46,31 @@ export class RoomService {
     }
 
     return searchParams;
+  }
+
+  private transformParams(params: SearchParams) {
+    const {
+      page,
+      perPage,
+      priceMax,
+      priceMin,
+      projects,
+      rooms,
+      squareMax,
+      squareMin,
+    } = params;
+
+    const paramsURL: ApiParams = {
+      "f[projects][]": projects ? Number(projects) : undefined,
+      "f[rooms][]": rooms && rooms.length ? rooms : undefined,
+      "f[price][min]": priceMin ? Number(priceMin) : undefined,
+      "f[price][max]": priceMax ? Number(priceMax) : undefined,
+      "f[square][min]": squareMin ? Number(squareMin) : undefined,
+      "f[square][max]": squareMax ? Number(squareMax) : undefined,
+      per_page: perPage ? Number(perPage) : 9,
+      page: 1,
+    };
+
+    return paramsURL;
   }
 }

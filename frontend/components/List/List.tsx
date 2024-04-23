@@ -5,22 +5,8 @@ import { Button } from "../Button/Button";
 import { Card } from "../Card/Card";
 
 export const List: React.FC = () => {
-  const {
-    meta,
-    data,
-    error,
-    isLoading,
-    isPlaceholder,
-    minPerPage,
-    setPerPage,
-  } = useList();
-
-  if (isLoading)
-    return (
-      <div className="flex justify-center items-center p-5">
-        <PulseLoader color="#2495FE" />
-      </div>
-    );
+  const { meta, data, error, isPlaceholder, minPerPage, setPerPage } =
+    useList();
 
   if (error)
     return <p className="t7 text-center">Не удалось загрузить список 😢</p>;

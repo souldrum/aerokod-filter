@@ -6,7 +6,6 @@ import { FloatingOverlay } from "@floating-ui/react";
 import cn from "classnames";
 import React from "react";
 import { BrowserView, MobileView } from "react-device-detect";
-import { PulseLoader } from "react-spinners";
 import { Button } from "../Button/Button";
 import { CloseIcon } from "./CloseIcon";
 import { PriceFilter } from "./PriceFilter";
@@ -20,17 +19,9 @@ export const Filters: React.FC<{ onVisible?: (value: boolean) => void }> = ({
 }) => {
   const { clearQuery } = useAppRouter();
   const { meta } = useList();
-  const { filtersError, filtersLoading, price, projects, rooms, square } =
-    useFiltersData();
+  const { filtersError, price, projects, rooms, square } = useFiltersData();
 
   const [animate, setAnimate] = React.useState("animate-filters-in");
-
-  if (filtersLoading)
-    return (
-      <div className="flex justify-center items-center p-5">
-        <PulseLoader color="#2495FE" />
-      </div>
-    );
 
   if (filtersError)
     return (
